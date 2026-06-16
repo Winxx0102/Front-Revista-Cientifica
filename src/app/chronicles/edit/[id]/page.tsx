@@ -5,6 +5,7 @@ import { fetchApi } from '@/services/api';
 import { useAuth } from '@/context/AuthContext';
 import { toast } from 'sonner';
 import { motion } from 'framer-motion';
+import ProtectedRoute from '@/components/ProtectedRoute';
 
 // --- Componente de Protección Interno ---
 function AdminGuard({ children, user, isLoading, router }: {
@@ -15,12 +16,12 @@ function AdminGuard({ children, user, isLoading, router }: {
 }) {
   useEffect(() => {
     if (!isLoading && user?.role !== 'ADMIN' && user?.role !== 'SUPERADMIN') {
-      toast.error("Acceso denegado: Se requieren permisos de administrador.");
+      toast.error("Acceso denegado: Se requieren permisos administrativos.");
       router.push('/dashboard');
     }
   }, [user, isLoading, router]);
 
-  if (isLoading) return <div className="min-h-screen flex items-center justify-center text-indigo-400">Validando acceso...</div>;
+  if (isLoading) return <div className="min-h-screen bg-[#0b1b2e] flex items-center justify-center text-slate-500 uppercase tracking-widest text-sm">Validando acceso...</div>;
   if (user?.role !== 'ADMIN' && user?.role !== 'SUPERADMIN') return null;
   return <>{children}</>;
 }
@@ -42,7 +43,7 @@ export default function EditChroniclePage() {
           setLoading(false);
         })
         .catch(() => {
-          toast.error("Error al cargar los datos.");
+          toast.error("Error al cargar la crónica.");
           setLoading(false);
         });
     }
@@ -59,72 +60,72 @@ export default function EditChroniclePage() {
       });
 
       toast.dismiss(loadingToast);
-      toast.success('¡Crónica actualizada con éxito!');
+      toast.success('Crónica actualizada correctamente.');
       router.push(`/revista/${id}`);
     } catch (err: unknown) {
       toast.dismiss(loadingToast);
-      toast.error('Error al actualizar.');
+      toast.error('Error al actualizar la publicación.');
     }
   };
 
   const handleDelete = () => {
-    toast.warning('¿Estás seguro de eliminar esta crónica?', {
-      description: "Esta acción es irreversible.",
+    toast.warning('¿Desea eliminar esta crónica?', {
+      description: "Esta acción es irreversible y afectará al portal.",
       action: {
-        label: "Eliminar definitivamente",
+        label: "Confirmar eliminación",
         onClick: async () => {
           try {
             await fetchApi(`/revista/${id}`, { method: 'DELETE' });
-            toast.success('Crónica eliminada correctamente');
+            toast.success('Crónica eliminada del sistema.');
             router.push('/dashboard');
           } catch {
-            toast.error("Error al eliminar.");
+            toast.error("Error al eliminar la crónica.");
           }
         }
-      },
-      cancel: { label: "Cancelar", onClick: () => toast.dismiss() }
+      }
     });
   };
 
-  if (loading) return <div className="min-h-screen flex items-center justify-center text-indigo-400">Cargando editor...</div>;
+  if (loading) return <div className="min-h-screen bg-[#0b1b2e] flex items-center justify-center text-slate-500 uppercase tracking-widest text-sm">Cargando editor...</div>;
 
   return (
+     <ProtectedRoute>
     <AdminGuard user={user} isLoading={isLoading} router={router}>
-      <div className="min-h-screen bg-gray-950 py-16 px-4">
+      <div className="min-h-screen bg-[#0b1b2e] py-16 px-6">
         <motion.div 
-          initial={{ opacity: 0, y: 20 }}
-          animate={{ opacity: 1, y: 0 }}
+          initial={{ opacity: 0 }}
+          animate={{ opacity: 1 }}
           className="max-w-3xl mx-auto"
         >
-          <div className="mb-8">
-            <h1 className="text-4xl font-black text-white mb-2">Editar Crónica</h1>
-            <p className="text-gray-400">Modifica los detalles de esta historia.</p>
+          <div className="mb-12 border-l-2 border-sky-700 pl-6">
+            <h1 className="text-4xl font-serif italic text-white mb-2">Editar Publicación</h1>
+            <p className="text-slate-400">Panel de control administrativo para modificar el contenido.</p>
           </div>
 
-          <form onSubmit={handleSubmit} className="bg-gray-900/40 backdrop-blur-xl border border-white/5 p-8 rounded-3xl shadow-2xl space-y-6">
-            <div className="space-y-2">
-              <label className="text-xs font-bold text-gray-500 uppercase tracking-wider ml-1">Título</label>
+          <form onSubmit={handleSubmit} className="bg-[#0e243d] border border-white/5 p-10 rounded shadow-2xl space-y-8">
+            <div className="space-y-3">
+              <label className="text-[11px] font-bold text-slate-400 uppercase tracking-[0.2em]">Título del Artículo</label>
               <input 
                 value={formData.title}
                 onChange={(e) => setFormData({...formData, title: e.target.value})}
-                className="w-full p-4 bg-gray-950 border border-white/10 text-white rounded-xl focus:border-indigo-500 focus:bg-gray-900 outline-none transition-all"
+                className="w-full p-4 bg-[#0b1b2e] border border-white/10 text-white rounded outline-none focus:border-sky-500 transition-all"
               />
             </div>
 
-            <div className="space-y-2">
-              <label className="text-xs font-bold text-gray-500 uppercase tracking-wider ml-1">Contenido</label>
+            <div className="space-y-3">
+              <label className="text-[11px] font-bold text-slate-400 uppercase tracking-[0.2em]">Contenido Técnico</label>
               <textarea 
                 value={formData.content}
                 onChange={(e) => setFormData({...formData, content: e.target.value})}
                 rows={12}
-                className="w-full p-4 bg-gray-950 border border-white/10 text-white rounded-xl focus:border-indigo-500 focus:bg-gray-900 outline-none transition-all resize-none"
+                className="w-full p-4 bg-[#0b1b2e] border border-white/10 text-white rounded outline-none focus:border-sky-500 transition-all resize-none"
               />
             </div>
             
-            <div className="flex gap-4 pt-4">
+            <div className="flex gap-6 pt-4">
               <button 
                 type="submit" 
-                className="flex-1 bg-indigo-600 hover:bg-indigo-500 text-white py-4 rounded-xl font-black transition-all shadow-lg shadow-indigo-500/20 active:scale-[0.98]"
+                className="flex-1 py-4 bg-sky-700 hover:bg-sky-600 text-white font-bold uppercase tracking-widest text-xs transition-all rounded"
               >
                 Guardar Cambios
               </button>
@@ -132,7 +133,7 @@ export default function EditChroniclePage() {
               <button 
                 type="button" 
                 onClick={handleDelete}
-                className="px-8 bg-red-900/20 border border-red-500/20 text-red-400 hover:bg-red-600 hover:text-white rounded-xl font-bold transition-all active:scale-[0.98]"
+                className="px-8 py-4 border border-red-900/50 text-red-400 hover:bg-red-900/20 font-bold uppercase tracking-widest text-xs transition-all rounded"
               >
                 Eliminar
               </button>
@@ -141,5 +142,6 @@ export default function EditChroniclePage() {
         </motion.div>
       </div>
     </AdminGuard>
+    </ProtectedRoute>
   );
 }
