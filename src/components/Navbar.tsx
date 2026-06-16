@@ -2,9 +2,10 @@
 
 import { useState } from 'react';
 import Link from 'next/link';
+import Image from 'next/image';
 import { useAuth } from '@/context/AuthContext';
 import { usePathname } from 'next/navigation';
-import { motion } from 'framer-motion';
+import { motion, AnimatePresence } from 'framer-motion';
 import { fetchApi } from '@/services/api';
 
 export default function Navbar() {
@@ -16,57 +17,63 @@ export default function Navbar() {
 
   const isAdminOrSuper = !isLoading && (user?.role === 'ADMIN' || user?.role === 'SUPERADMIN');
 
-  const handleLogout = async () => {
-    try {
-      await fetchApi('/auth/logout', { method: 'GET' });
-    } catch (error) {
-      console.error("Error al cerrar sesión");
-    } finally {
-      logout();
-      window.location.href = '/login';
-    }
-  };
-
   return (
-    // Fondo azul oscuro institucional (como en las capturas)
     <motion.nav 
-      initial={{ opacity: 0 }} 
-      animate={{ opacity: 1 }}
-      className="bg-[#0b1b2e] border-b border-white/10 w-full"
+      initial={{ y: -20, opacity: 0 }} 
+      animate={{ y: 0, opacity: 1 }}
+      className="bg-[#0b1b2e] border-b border-white/10 w-full sticky top-0 z-50"
     >
       <div className="max-w-6xl mx-auto px-6 h-20 flex items-center justify-between">
         
-        {/* Logo Institucional */}
-        <Link href="/dashboard" className="flex items-center gap-3">
-          <svg width="120" height="40" viewBox="0 0 180 40" fill="white">
-            <text x="0" y="25" font-family="var(--font-geist-sans)" font-size="16" font-weight="bold">SABERES</text>
-          </svg>
+        {/* Logo con Imagen y Texto Grande */}
+        <Link href="/dashboard" className="flex items-center gap-3 group">
+          <div className="relative w-10 h-10 overflow-hidden rounded">
+            <Image src="/componentes/imagen.jpg" alt="Logo" fill className="object-cover" />
+          </div>
+          <span className="text-xl font-serif font-bold text-white tracking-wide group-hover:text-sky-400 transition-colors">
+            SABERES
+          </span>
         </Link>
 
-        {/* Menú de navegación principal */}
+        {/* Desktop Menu */}
         <div className="hidden md:flex items-center gap-8">
           <ul className="flex items-center gap-6 text-sm font-medium text-slate-300">
             <li><Link href="/dashboard" className="hover:text-white transition-colors">Inicio</Link></li>
-            <li><Link href="/articulos" className="hover:text-white transition-colors">Artículos</Link></li>
-            <li><Link href="/repositorio" className="hover:text-white transition-colors">Repositorio</Link></li>
-            <li><Link href="/normas" className="hover:text-white transition-colors">Normas</Link></li>
+            <li><Link href="/cronicas" className="hover:text-white transition-colors">Artículos</Link></li>
           </ul>
 
-          {/* Acción Admin (Solo admins) */}
           {isAdminOrSuper && (
             <Link href="/admin/upload" className="bg-sky-700 hover:bg-sky-800 text-white px-4 py-2 rounded text-sm transition-colors">
               Subir Publicación
             </Link>
           )}
 
-          <button 
-            onClick={handleLogout} 
-            className="text-slate-400 hover:text-white text-sm transition-colors"
-          >
+          <button onClick={() => { logout(); window.location.href = '/login'; }} className="text-slate-400 hover:text-white text-sm transition-colors">
             Salir
           </button>
         </div>
+
+        {/* Botón Hamburguesa Móvil */}
+        <button className="md:hidden text-white" onClick={() => setIsOpen(!isOpen)}>
+          {isOpen ? '✕' : '☰'}
+        </button>
       </div>
+
+      {/* Menú Móvil Desplegable */}
+      <AnimatePresence>
+        {isOpen && (
+          <motion.div 
+            initial={{ height: 0, opacity: 0 }} animate={{ height: 'auto', opacity: 1 }} exit={{ height: 0, opacity: 0 }}
+            className="md:hidden bg-[#0e243d] border-t border-white/10 overflow-hidden"
+          >
+            <div className="flex flex-col p-6 gap-4 text-slate-300">
+              <Link href="/dashboard" onClick={() => setIsOpen(false)}>Inicio</Link>
+              <Link href="/cronicas" onClick={() => setIsOpen(false)}>Artículos</Link>
+              <button onClick={logout} className="text-left text-red-400">Salir</button>
+            </div>
+          </motion.div>
+        )}
+      </AnimatePresence>
     </motion.nav>
   );
 }
