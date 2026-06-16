@@ -1,17 +1,15 @@
 import type { Metadata } from "next";
-import { Geist, Geist_Mono } from "next/font/google";
+// Cambiamos las fuentes por las que definiste en tu HTML original
 import { AuthProvider } from "@/context/AuthContext";
 import { Toaster } from "sonner";
 import Navbar from "@/components/Navbar";
 import Footer from "@/components/Footer";
 import "./globals.css";
 
-const geistSans = Geist({ variable: "--font-geist-sans", subsets: ["latin"] });
-const geistMono = Geist_Mono({ variable: "--font-geist-mono", subsets: ["latin"] });
-
+// Metadata actualizada a la nueva identidad
 export const metadata: Metadata = {
-  title: "NexChron",
-  description: "Plataforma de gestión de crónicas",
+  title: "Saberes Politécnicos | Revista Científica Digital",
+  description: "Revista científica digital de acceso abierto de la UPTA.",
 };
 
 export default function RootLayout({
@@ -20,26 +18,31 @@ export default function RootLayout({
   children: React.ReactNode;
 }>) {
   return (
-    <html lang="en" className={`${geistSans.variable} ${geistMono.variable} h-full antialiased`}>
-      <body className="min-h-screen flex flex-col relative text-white selection:bg-indigo-500/30">
+    // Quitamos la clase 'text-white' forzada y dejamos que CSS maneje el tema
+    <html lang="es" suppressHydrationWarning>
+      <head>
+        {/* Cargamos las fuentes de Google Fonts aquí o vía CSS imports */}
+        <link rel="preconnect" href="https://fonts.googleapis.com" />
+        <link rel="preconnect" href="https://fonts.gstatic.com" crossOrigin="anonymous" />
+        <link href="https://fonts.googleapis.com/css2?family=Instrument+Serif:ital@0;1&family=Source+Sans+3:ital,wght@0,300..900;1,300..900&display=swap" rel="stylesheet" />
+      </head>
+      
+      <body className="min-h-screen flex flex-col antialiased">
         
-        {/* Fondo Global */}
-        <div className="fixed inset-0 -z-10 bg-gray-950 overflow-hidden pointer-events-none">
-          <div className="absolute top-[-10%] left-[-10%] w-[40%] h-[40%] rounded-full bg-indigo-900/40 blur-[120px]" />
-          <div className="absolute bottom-[-10%] right-[-10%] w-[40%] h-[40%] rounded-full bg-blue-900/30 blur-[120px]" />
-          <div className="absolute top-[40%] left-[40%] w-[30%] h-[30%] rounded-full bg-purple-900/20 blur-[120px]" />
-        </div>
-
+        {/* Eliminamos los divs de "glamour tecnológico" y permitimos que 
+            tu CSS (var(--color-bg)) gestione el color de fondo real */}
+        
         <AuthProvider>
-          {/* La Navbar se encargará ella misma de ocultarse en el login */}
           <Navbar /> 
           
-          <main className="flex-grow relative z-10">
+          <main className="flex-grow">
             {children}
           </main>
 
           <Footer />
-          <Toaster theme="dark" position="top-right" richColors />
+          
+          {/* Ajustamos el Toaster para que se adapte al tema */}
+          <Toaster richColors position="top-right" />
         </AuthProvider>
       </body>
     </html>
