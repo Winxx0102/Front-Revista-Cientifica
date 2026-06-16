@@ -1,8 +1,9 @@
 @import "tailwindcss";
 
+/* Fondo oscuro profesional estilo revista científica */
 body {
-  background-color: #c8cedf;
-  color: rgb(0, 0, 0);
+  background-color: #0b1b2e; 
+  color: #f8fafc;
 }
 
 @theme {

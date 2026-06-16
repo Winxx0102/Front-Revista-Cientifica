@@ -38,63 +38,67 @@ export default function LoginPage() {
   };
 
   if (isLoading) {
-    return <div className="min-h-screen flex items-center justify-center text-white">Cargando sesión...</div>;
+    return (
+      <div className="min-h-screen flex items-center justify-center bg-[#0b1b2e] text-slate-400 font-mono text-sm tracking-widest uppercase">
+        Cargando sesión...
+      </div>
+    );
   }
 
   return (
-    <div className="min-h-screen flex items-center justify-center p-4 bg-gray-950">
-      <div className="max-w-4xl w-full flex flex-col md:flex-row items-center gap-12">
+    <div className="min-h-screen flex items-center justify-center p-6 bg-[#0b1b2e]">
+      <div className="max-w-5xl w-full flex flex-col md:flex-row items-center gap-16">
         
-        {/* Contenedor de Bienvenida */}
-        <div className="flex-1 text-left space-y-4">
-          <h1 className="text-5xl font-extrabold text-transparent bg-clip-text bg-gradient-to-r from-blue-400 to-indigo-500">
-            NexChron
+        {/* Contenedor Institucional */}
+        <div className="flex-1 text-left space-y-6">
+          <h1 className="text-6xl md:text-7xl font-serif italic text-white leading-tight tracking-tight">
+            Saberes<br />Politécnicos
           </h1>
-          <p className="text-gray-400 text-lg leading-relaxed">
-            Tu espacio personal para organizar, guardar y revivir tus historias. 
-            Crea crónicas detalladas, estructura tus mundos y mantén cada detalle 
-            a salvo en un entorno diseñado para la narrativa.
+          <p className="text-slate-400 text-lg leading-relaxed max-w-lg">
+            Plataforma de gestión académica y editorial de la Universidad Politécnica Territorial del Estado Aragua (UPTA). Acceda para consultar, revisar o someter sus artículos de investigación.
           </p>
-          <div className="flex items-center gap-2 text-blue-400 font-medium">
-            <span></span>
-            <span>Seguridad y simplicidad en cada crónica</span>
+          <div className="flex items-center gap-4 text-xs font-bold tracking-widest uppercase text-slate-500">
+            <span className="w-8 h-px bg-slate-600"></span>
+            <span>Acceso Institucional</span>
           </div>
         </div>
 
-        {/* Formulario */}
-        <form onSubmit={handleSubmit} className="p-8 bg-gray-900 rounded-3xl w-full max-w-md shadow-2xl border border-gray-800">
-          <h2 className="text-2xl font-bold text-white mb-6">Iniciar Sesión</h2>
+        {/* Formulario Editorial */}
+        <form onSubmit={handleSubmit} className="p-10 bg-[#142840] rounded border border-white/10 w-full max-w-md shadow-2xl">
+          <h2 className="text-2xl font-serif italic text-white mb-8">Iniciar Sesión</h2>
           
-          <input 
-            required
-            type="email"
-            value={form.email}
-            className="w-full p-4 mb-4 bg-gray-950 text-white rounded-xl border border-gray-700 outline-none focus:border-blue-500 transition-colors" 
-            placeholder="Email" 
-            onChange={e => setForm({...form, email: e.target.value})} 
-          />
-          
-          <input 
-            required
-            type="password"
-            value={form.password}
-            className="w-full p-4 mb-6 bg-gray-950 text-white rounded-xl border border-gray-700 outline-none focus:border-blue-500 transition-colors" 
-            placeholder="Password" 
-            onChange={e => setForm({...form, password: e.target.value})} 
-          />
+          <div className="space-y-4">
+            <input 
+              required
+              type="email"
+              value={form.email}
+              className="w-full p-4 bg-[#0b1b2e] text-white rounded border border-white/5 outline-none focus:border-white/30 transition-all placeholder:text-slate-600" 
+              placeholder="Correo electrónico" 
+              onChange={e => setForm({...form, email: e.target.value})} 
+            />
+            
+            <input 
+              required
+              type="password"
+              value={form.password}
+              className="w-full p-4 bg-[#0b1b2e] text-white rounded border border-white/5 outline-none focus:border-white/30 transition-all placeholder:text-slate-600" 
+              placeholder="Contraseña" 
+              onChange={e => setForm({...form, password: e.target.value})} 
+            />
+          </div>
           
           <button 
             disabled={loading}
             type="submit"
-            className="w-full p-4 bg-blue-600 hover:bg-blue-500 text-white rounded-xl font-bold transition-all disabled:opacity-50"
+            className="w-full p-4 mt-8 bg-sky-700 hover:bg-sky-600 text-white rounded font-medium transition-colors disabled:opacity-50"
           >
-            {loading ? 'Accediendo...' : 'Ingresar'}
+            {loading ? 'Autenticando...' : 'Ingresar'}
           </button>
 
-          <div className="mt-6 text-center">
-            <span className="text-gray-500 text-sm">¿No tienes cuenta? </span>
-            <Link href="/register" className="text-blue-400 hover:underline font-bold">
-              Regístrate aquí
+          <div className="mt-8 text-center pt-6 border-t border-white/5">
+            <span className="text-slate-500 text-sm">¿No posee credenciales? </span>
+            <Link href="/register" className="text-white hover:text-sky-400 transition-colors font-medium">
+              Solicitar acceso
             </Link>
           </div>
         </form>

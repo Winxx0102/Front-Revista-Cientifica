@@ -14,7 +14,7 @@ export default function RegisterPage() {
     e.preventDefault();
     setLoading(true);
     
-    const loadingToast = toast.loading("Creando tu cuenta...");
+    const loadingToast = toast.loading("Registrando usuario...");
 
     try {
       await fetchApi('/users/register', { 
@@ -23,12 +23,11 @@ export default function RegisterPage() {
       });
 
       toast.dismiss(loadingToast);
-      toast.success('¡Registro exitoso! Ya puedes iniciar sesión.');
+      toast.success('Registro exitoso. Ya puede iniciar sesión.');
       router.push('/login');
     } catch (err: unknown) {
       toast.dismiss(loadingToast);
-      console.error(err);
-      const message = err instanceof Error ? err.message : 'Error al registrar. Intenta nuevamente.';
+      const message = err instanceof Error ? err.message : 'Error al registrar. Intente nuevamente.';
       toast.error(message);
     } finally {
       setLoading(false);
@@ -36,62 +35,65 @@ export default function RegisterPage() {
   };
 
   return (
-    <div className="min-h-screen flex items-center justify-center p-4 bg-gray-950">
-      <div className="max-w-4xl w-full flex flex-col md:flex-row items-center gap-12">
+    <div className="min-h-screen flex items-center justify-center p-6 bg-[#0b1b2e]">
+      <div className="max-w-5xl w-full flex flex-col md:flex-row items-center gap-16">
         
-        {/* Contenedor de Bienvenida */}
-        <div className="flex-1 text-left space-y-4">
-          <h1 className="text-5xl font-extrabold text-transparent bg-clip-text bg-gradient-to-r from-indigo-400 to-purple-500">
-            Únete a NexChron
+        {/* Contenedor Editorial */}
+        <div className="flex-1 text-left space-y-6">
+          <h1 className="text-6xl font-serif italic text-white leading-tight">
+            Solicitar<br />Acceso
           </h1>
-          <p className="text-gray-400 text-lg leading-relaxed">
-            Comienza a digitalizar tus mundos. Crea una cuenta gratuita y comienza a organizar tus historias, crónicas y notas en un solo lugar.
+          <p className="text-slate-400 text-lg leading-relaxed max-w-lg">
+            Regístrese para formar parte de la comunidad editorial de la UPTA. 
+            Cree una cuenta para gestionar sus publicaciones, revisar artículos y participar en el repositorio técnico.
           </p>
-          <div className="flex items-center gap-2 text-indigo-400 font-medium">
-            <span>🚀</span>
-            <span>Acceso ilimitado a tus crónicas</span>
+          <div className="flex items-center gap-4 text-xs font-bold tracking-widest uppercase text-slate-500">
+            <span className="w-8 h-px bg-slate-600"></span>
+            <span>Alta de usuario</span>
           </div>
         </div>
 
-        {/* Formulario */}
-        <form onSubmit={handleSubmit} className="p-8 bg-gray-900 rounded-3xl w-full max-w-md shadow-2xl border border-gray-800">
-          <h2 className="text-2xl font-bold text-white mb-6">Crear cuenta</h2>
+        {/* Formulario de Registro */}
+        <form onSubmit={handleSubmit} className="p-10 bg-[#142840] rounded border border-white/10 w-full max-w-md shadow-2xl">
+          <h2 className="text-2xl font-serif italic text-white mb-8">Crear cuenta</h2>
           
-          <input 
-            required
-            className="w-full p-4 mb-4 bg-gray-950 text-white rounded-xl border border-gray-700 focus:border-indigo-500 outline-none transition-all" 
-            placeholder="Nombre y Apellido" 
-            onChange={e => setForm({...form, name: e.target.value})} 
-          />
-          
-          <input 
-            required
-            type="email"
-            className="w-full p-4 mb-4 bg-gray-950 text-white rounded-xl border border-gray-700 focus:border-indigo-500 outline-none transition-all" 
-            placeholder="Email" 
-            onChange={e => setForm({...form, email: e.target.value})} 
-          />
-          
-          <input 
-            required
-            type="password" 
-            className="w-full p-4 mb-6 bg-gray-950 text-white rounded-xl border border-gray-700 focus:border-indigo-500 outline-none transition-all" 
-            placeholder="Contraseña" 
-            onChange={e => setForm({...form, password: e.target.value})} 
-          />
+          <div className="space-y-4">
+            <input 
+              required
+              className="w-full p-4 bg-[#0b1b2e] text-white rounded border border-white/5 outline-none focus:border-white/30 transition-all placeholder:text-slate-600" 
+              placeholder="Nombre y Apellido" 
+              onChange={e => setForm({...form, name: e.target.value})} 
+            />
+            
+            <input 
+              required
+              type="email"
+              className="w-full p-4 bg-[#0b1b2e] text-white rounded border border-white/5 outline-none focus:border-white/30 transition-all placeholder:text-slate-600" 
+              placeholder="Correo electrónico" 
+              onChange={e => setForm({...form, email: e.target.value})} 
+            />
+            
+            <input 
+              required
+              type="password" 
+              className="w-full p-4 bg-[#0b1b2e] text-white rounded border border-white/5 outline-none focus:border-white/30 transition-all placeholder:text-slate-600" 
+              placeholder="Contraseña" 
+              onChange={e => setForm({...form, password: e.target.value})} 
+            />
+          </div>
           
           <button 
             disabled={loading}
             type="submit"
-            className="w-full p-4 bg-indigo-600 hover:bg-indigo-500 text-white rounded-xl font-bold transition-all disabled:opacity-50"
+            className="w-full p-4 mt-8 bg-sky-700 hover:bg-sky-600 text-white rounded font-medium transition-colors disabled:opacity-50"
           >
             {loading ? 'Procesando...' : 'Registrarse'}
           </button>
 
-          <div className="mt-6 text-center">
-            <span className="text-gray-500 text-sm">¿Ya tienes cuenta? </span>
-            <Link href="/login" className="text-indigo-400 hover:underline font-bold">
-              Inicia sesión
+          <div className="mt-8 text-center pt-6 border-t border-white/5">
+            <span className="text-slate-500 text-sm">¿Ya posee cuenta? </span>
+            <Link href="/login" className="text-white hover:text-sky-400 transition-colors font-medium">
+              Inicie sesión
             </Link>
           </div>
         </form>

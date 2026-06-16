@@ -11,7 +11,6 @@ type Chronicle = {
   _id?: string;
   title?: string;
   author?: string;
-  authorEmail?: string;
   content?: string;
   [key: string]: unknown;
 };
@@ -57,67 +56,64 @@ export default function DashboardPage() {
 
   return (
     <ProtectedRoute>
-      <div className="min-h-screen pb-20">
-        <main className="max-w-7xl mx-auto px-6 py-12">
+      <div className="min-h-screen bg-[#0b1b2e] text-slate-200">
+        <main className="max-w-6xl mx-auto px-6 py-16">
           
-          <div className="flex flex-col mb-12">
-            <h1 className="text-4xl font-black text-white mb-2">Explorar</h1>
-            <p className="text-gray-400">Descubre y sumérgete en las crónicas de la comunidad.</p>
+          {/* Encabezado Editorial */}
+          <div className="mb-16">
+            <h1 className="text-5xl font-serif italic text-white mb-4">Explorar artículos</h1>
+            <p className="text-slate-400">Selección de investigaciones y proyectos de la comunidad UPTA.</p>
           </div>
           
-          {/* Barra de búsqueda y Filtro Responsivos */}
+          {/* Filtros más sobrios */}
           <div className="flex flex-col md:flex-row gap-4 mb-12">
-            {/* Campo de búsqueda */}
-            <div className="relative flex-1 group">
-              <span className="absolute left-4 top-1/2 -translate-y-1/2 text-gray-500 group-focus-within:text-indigo-400 transition-colors">🔍</span>
-              <input 
-                type="text"
-                placeholder={`Buscar en ${filterBy === 'all' ? 'todo el archivo' : filterBy}...`}
-                className="w-full p-4 pl-12 bg-gray-900/40 border border-white/5 rounded-2xl text-white placeholder-gray-600 outline-none focus:border-indigo-500/50 focus:bg-gray-900 transition-all shadow-xl"
-                onChange={(e) => { setSearch(e.target.value); setCurrentPage(1); }}
-              />
-            </div>
+            <input 
+              type="text"
+              placeholder="Buscar título o autor..."
+              className="flex-1 p-4 bg-[#142840] border border-white/10 rounded text-white outline-none focus:border-white/30 transition-all"
+              onChange={(e) => { setSearch(e.target.value); setCurrentPage(1); }}
+            />
             
-            {/* Botón de Filtro Estilizado */}
-            <div className="relative">
-              <select 
-                className="w-full md:w-auto appearance-none bg-gray-900/40 border border-white/5 rounded-2xl px-6 py-4 text-gray-300 outline-none focus:text-white transition-all cursor-pointer hover:bg-gray-900 focus:ring-2 focus:ring-indigo-500/20 pr-12"
-                onChange={(e) => setFilterBy(e.target.value as 'title' | 'author' | 'all')}
-                value={filterBy}
-              >
-                <option value="all">📁 Filtrar: Todo</option>
-                <option value="title">📖 Título</option>
-                <option value="author">👤 Autor</option>
-              </select>
-              <div className="absolute right-4 top-1/2 -translate-y-1/2 pointer-events-none text-gray-500 text-xs">▼</div>
-            </div>
+            <select 
+              className="md:w-48 p-4 bg-[#142840] border border-white/10 rounded text-slate-300 outline-none cursor-pointer hover:border-white/30"
+              onChange={(e) => setFilterBy(e.target.value as 'title' | 'author' | 'all')}
+              value={filterBy}
+            >
+              <option value="all">Todo</option>
+              <option value="title">Por Título</option>
+              <option value="author">Por Autor</option>
+            </select>
           </div>
           
-          {/* Grid de Crónicas */}
+          {/* Grid de contenido */}
           <motion.div 
-            initial={{ opacity: 0, y: 20 }}
-            animate={{ opacity: 1, y: 0 }}
-            className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6"
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8"
           >
             {paginatedData.length > 0 ? (
               paginatedData.map((c, index) => (
                 <ChronicleCard key={c?.id || c?._id || index} chronicle={c} />
               ))
             ) : (
-              <div className="col-span-full text-center py-20 text-gray-600 border border-dashed border-gray-800 rounded-3xl">
-                No se encontraron crónicas que coincidan con tu búsqueda.
+              <div className="col-span-full text-center py-20 text-slate-500 border border-slate-800 rounded">
+                No se encontraron resultados para su búsqueda.
               </div>
             )}
           </motion.div>
 
-          {/* Paginador */}
+          {/* Paginación minimalista */}
           {totalPages > 1 && (
             <div className="flex justify-center gap-2 mt-16">
               {[...Array(totalPages)].map((_, i) => (
                 <button
                   key={i}
                   onClick={() => setCurrentPage(i + 1)}
-                  className={`w-10 h-10 rounded-xl transition-all font-bold ${currentPage === i + 1 ? 'bg-indigo-600 text-white shadow-lg shadow-indigo-500/20' : 'bg-gray-900 text-gray-500 hover:bg-gray-800'}`}
+                  className={`px-4 py-2 text-sm rounded transition-all ${
+                    currentPage === i + 1 
+                      ? 'bg-white text-[#0b1b2e] font-bold' 
+                      : 'bg-[#142840] text-slate-400 hover:text-white'
+                  }`}
                 >
                   {i + 1}
                 </button>
