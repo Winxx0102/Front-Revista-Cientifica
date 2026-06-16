@@ -11,6 +11,7 @@ type Chronicle = {
   author?: string;
   authorEmail?: string;
   content?: string;
+  file_path?: string; // Campo añadido para la ruta del archivo
 };
 
 export default function ChronicleCard({ chronicle }: { chronicle: Chronicle | null }) {
@@ -21,6 +22,15 @@ export default function ChronicleCard({ chronicle }: { chronicle: Chronicle | nu
 
   const chronicleId = chronicle?.id || chronicle?._id;
   const canEdit = !isLoading && (user?.role === 'ADMIN' || user?.role === 'SUPERADMIN');
+
+  // Función para construir la URL pública del archivo en Supabase
+  const getFileUrl = (path: string | undefined) => {
+    if (!path) return null;
+    const PROJECT_ID = 'citlayiapryuepjhdofv'; // Tu ID de proyecto
+    return `https://${PROJECT_ID}.supabase.co/storage/v1/object/public/Documentos/${path}`;
+  };
+
+  const fileUrl = getFileUrl(chronicle?.file_path);
 
   const handleEdit = (e: React.MouseEvent) => {
     e.preventDefault(); 
@@ -59,6 +69,24 @@ export default function ChronicleCard({ chronicle }: { chronicle: Chronicle | nu
             <p className="text-slate-400 text-sm leading-relaxed line-clamp-4 font-light italic">
               {chronicle?.content || 'Sin contenido disponible...'}
             </p>
+
+            {/* Minivista del archivo */}
+            {fileUrl && (
+              <div className="mt-6">
+                <a 
+                  href={fileUrl} 
+                  target="_blank" 
+                  rel="noopener noreferrer"
+                  className="inline-flex items-center gap-2 text-[9px] font-bold text-sky-500 uppercase tracking-[0.2em] hover:text-white transition-colors"
+                  onClick={(e) => e.stopPropagation()} 
+                >
+                  <svg className="w-3 h-3" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15.172 7l-6.586 6.586a2 2 0 102.828 2.828L18 9.858M12 4v1m0 16v-1m0-16h1m-1 16h1" />
+                  </svg>
+                  Ver archivo adjunto
+                </a>
+              </div>
+            )}
           </div>
 
           {/* Footer de la tarjeta */}
