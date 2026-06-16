@@ -30,7 +30,7 @@ export default function ChronicleCard({ chronicle }: { chronicle: Chronicle | nu
 
   return (
     <motion.div whileHover={{ y: -2 }} transition={{ duration: 0.2 }} className="h-full">
-      <Link href={chronicleId ? `/revista/${chronicleId}` : '#'} className="block h-full">
+      <Link href={chronicleId ? `/chronicles/${chronicleId}` : '#'} className="block h-full">
         <div className="flex flex-col h-full bg-[#0e243d] border border-white/5 p-8 transition-all hover:border-sky-700/50 shadow-xl group">
           
           {/* Header de la tarjeta */}
