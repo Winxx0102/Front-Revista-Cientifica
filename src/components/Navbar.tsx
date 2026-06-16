@@ -13,6 +13,7 @@ export default function Navbar() {
   const pathname = usePathname();
   const [isOpen, setIsOpen] = useState(false);
 
+  // No mostrar navbar en login/register
   if (pathname === '/login' || pathname === '/register') return null;
 
   const isAdminOrSuper = !isLoading && (user?.role === 'ADMIN' || user?.role === 'SUPERADMIN');
@@ -25,10 +26,17 @@ export default function Navbar() {
     >
       <div className="max-w-6xl mx-auto px-6 h-20 flex items-center justify-between">
         
-        {/* Logo con Imagen y Texto Grande */}
+        {/* Logo Institucional */}
         <Link href="/dashboard" className="flex items-center gap-3 group">
           <div className="relative w-10 h-10 overflow-hidden rounded">
-            <Image src="imagen.jpg" alt="Logo" fill className="object-cover" />
+            {/* Asegúrate de tener tu imagen en public/images/imagen.jpg */}
+            <Image 
+              src="/images/imagen.jpg" 
+              alt="Logo" 
+              fill 
+              className="object-cover" 
+              priority
+            />
           </div>
           <span className="text-xl font-serif font-bold text-white tracking-wide group-hover:text-sky-400 transition-colors">
             SABERES
@@ -43,7 +51,7 @@ export default function Navbar() {
           </ul>
 
           {isAdminOrSuper && (
-            <Link href="/admin/upload" className="bg-sky-700 hover:bg-sky-800 text-white px-4 py-2 rounded text-sm transition-colors">
+            <Link href="/chronicles/create" className="bg-sky-700 hover:bg-sky-800 text-white px-4 py-2 rounded text-sm transition-colors">
               Subir Publicación
             </Link>
           )}
@@ -54,7 +62,7 @@ export default function Navbar() {
         </div>
 
         {/* Botón Hamburguesa Móvil */}
-        <button className="md:hidden text-white" onClick={() => setIsOpen(!isOpen)}>
+        <button className="md:hidden text-white text-2xl" onClick={() => setIsOpen(!isOpen)}>
           {isOpen ? '✕' : '☰'}
         </button>
       </div>
@@ -63,13 +71,29 @@ export default function Navbar() {
       <AnimatePresence>
         {isOpen && (
           <motion.div 
-            initial={{ height: 0, opacity: 0 }} animate={{ height: 'auto', opacity: 1 }} exit={{ height: 0, opacity: 0 }}
+            initial={{ height: 0, opacity: 0 }} 
+            animate={{ height: 'auto', opacity: 1 }} 
+            exit={{ height: 0, opacity: 0 }}
             className="md:hidden bg-[#0e243d] border-t border-white/10 overflow-hidden"
           >
             <div className="flex flex-col p-6 gap-4 text-slate-300">
               <Link href="/dashboard" onClick={() => setIsOpen(false)}>Inicio</Link>
               <Link href="/cronicas" onClick={() => setIsOpen(false)}>Artículos</Link>
-              <button onClick={logout} className="text-left text-red-400">Salir</button>
+              
+              {/* Botón de subida para Admin en móvil */}
+              {isAdminOrSuper && (
+                <Link 
+                  href="/chronicles/create" 
+                  onClick={() => setIsOpen(false)}
+                  className="text-sky-400 font-semibold"
+                >
+                  Subir Publicación
+                </Link>
+              )}
+              
+              <button onClick={() => { logout(); setIsOpen(false); }} className="text-left text-red-400">
+                Salir
+              </button>
             </div>
           </motion.div>
         )}
