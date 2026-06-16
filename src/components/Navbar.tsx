@@ -28,7 +28,7 @@ export default function Navbar() {
         {/* Logo con Imagen y Texto Grande */}
         <Link href="/dashboard" className="flex items-center gap-3 group">
           <div className="relative w-10 h-10 overflow-hidden rounded">
-            <Image src="/componentes/imagen.jpg" alt="Logo" fill className="object-cover" />
+            <Image src="imagen.jpg" alt="Logo" fill className="object-cover" />
           </div>
           <span className="text-xl font-serif font-bold text-white tracking-wide group-hover:text-sky-400 transition-colors">
             SABERES
