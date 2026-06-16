@@ -1,18 +1,27 @@
 'use client';
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { useRouter } from 'next/navigation';
 import { fetchApi } from '@/services/api';
+import { useAuth } from '@/context/AuthContext';
 import ProtectedRoute from '@/components/ProtectedRoute';
 import { toast } from 'sonner';
 import { motion } from 'framer-motion';
 
 export default function CreateChroniclePage() {
   const router = useRouter();
+  const { user, isLoading } = useAuth();
   const [form, setForm] = useState({ title: '', author: '', content: '' });
+
+  useEffect(() => {
+    if (!isLoading && user && user.role !== 'ADMIN' && user.role !== 'SUPERADMIN') {
+      toast.error("Acceso denegado: Área administrativa exclusiva.");
+      router.replace('/dashboard');
+    }
+  }, [user, isLoading, router]);
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    const loadingToast = toast.loading("Publicando tu crónica...");
+    const loadingToast = toast.loading("Procesando publicación...");
 
     try {
       await fetchApi('/revista', {
@@ -21,74 +30,83 @@ export default function CreateChroniclePage() {
       });
 
       toast.dismiss(loadingToast);
-      toast.success('¡Crónica creada con éxito!');
+      toast.success('Publicación integrada al sistema.');
       router.push('/dashboard');
     } catch (err: unknown) {
       toast.dismiss(loadingToast);
-      const errorMessage = err instanceof Error ? err.message : 'Error al crear la crónica';
+      const errorMessage = err instanceof Error ? err.message : 'Error al publicar';
       toast.error(errorMessage);
     }
   };
 
+  if (isLoading || (user && user.role !== 'ADMIN' && user.role !== 'SUPERADMIN')) {
+    return (
+      <div className="min-h-screen bg-[#0b1b2e] flex items-center justify-center font-mono text-slate-500 uppercase tracking-widest text-sm">
+        Verificando credenciales...
+      </div>
+    );
+  }
+
   return (
     <ProtectedRoute>
-      <div className="min-h-screen  py-16 px-4">
+      <div className="min-h-screen bg-[#0b1b2e] py-20 px-6">
         <motion.div 
-          initial={{ opacity: 0, y: 20 }}
+          initial={{ opacity: 0, y: 10 }}
           animate={{ opacity: 1, y: 0 }}
           className="max-w-3xl mx-auto"
         >
-          {/* Encabezado */}
-          <div className="mb-8">
-            <h1 className="text-4xl font-black text-white mb-2">Escribe una nueva historia</h1>
-            <p className="text-gray-400">Comparte tu visión con la comunidad. Cada detalle cuenta.</p>
+          {/* Header con estilo institucional */}
+          <div className="mb-12 border-l-2 border-sky-700 pl-6">
+            <h1 className="text-4xl font-serif italic text-white mb-2">Subir Publicación</h1>
+            <p className="text-slate-400">Gestión de contenido para la revista científica UPTA.</p>
           </div>
 
-          {/* Formulario */}
-          <form onSubmit={handleSubmit} className="bg-gray-900/40 backdrop-blur-xl border border-white/5 p-8 rounded-3xl shadow-2xl space-y-6">
-            
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-              <div className="space-y-2">
-                <label className="text-xs font-bold text-gray-500 uppercase tracking-wider ml-1">Título</label>
+          {/* Formulario con mayor jerarquía visual */}
+          <form onSubmit={handleSubmit} className="bg-[#0e243d] border border-white/5 p-10 rounded shadow-2xl space-y-8">
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
+              <div className="space-y-3">
+                <label className="text-[11px] font-bold text-slate-400 uppercase tracking-[0.2em]">Título del Artículo</label>
                 <input 
                   required
-                  className="w-full p-4 bg-gray-950 border border-white/10 text-white rounded-xl focus:border-indigo-500 focus:bg-gray-900 outline-none transition-all"
-                  placeholder="El misterio de la montaña..."
+                  className="w-full p-4 bg-[#0b1b2e] border border-white/10 text-white rounded outline-none focus:border-sky-500 transition-all placeholder:text-slate-700"
+                  placeholder="Ingrese el título..."
                   value={form.title}
                   onChange={(e) => setForm({...form, title: e.target.value})}
                 />
               </div>
 
-              <div className="space-y-2">
-                <label className="text-xs font-bold text-gray-500 uppercase tracking-wider ml-1">Autor</label>
+              <div className="space-y-3">
+                <label className="text-[11px] font-bold text-slate-400 uppercase tracking-[0.2em]">Autor</label>
                 <input 
                   required
-                  className="w-full p-4 bg-gray-950 border border-white/10 text-white rounded-xl focus:border-indigo-500 focus:bg-gray-900 outline-none transition-all"
-                  placeholder="Tu nombre"
+                  className="w-full p-4 bg-[#0b1b2e] border border-white/10 text-white rounded outline-none focus:border-sky-500 transition-all placeholder:text-slate-700"
+                  placeholder="Nombre del autor..."
                   value={form.author}
                   onChange={(e) => setForm({...form, author: e.target.value})}
                 />
               </div>
             </div>
 
-            <div className="space-y-2">
-              <label className="text-xs font-bold text-gray-500 uppercase tracking-wider ml-1">Contenido</label>
+            <div className="space-y-3">
+              <label className="text-[11px] font-bold text-slate-400 uppercase tracking-[0.2em]">Contenido Técnico</label>
               <textarea 
                 required
-                rows={10}
-                className="w-full p-4 bg-gray-950 border border-white/10 text-white rounded-xl focus:border-indigo-500 focus:bg-gray-900 outline-none transition-all resize-none"
-                placeholder="Empieza a escribir aquí..."
+                rows={12}
+                className="w-full p-4 bg-[#0b1b2e] border border-white/10 text-white rounded outline-none focus:border-sky-500 transition-all resize-none placeholder:text-slate-700"
+                placeholder="Desarrolle el contenido científico aquí..."
                 value={form.content}
                 onChange={(e) => setForm({...form, content: e.target.value})}
               />
             </div>
 
-            <button 
-              type="submit"
-              className="w-full py-4 bg-indigo-600 hover:bg-indigo-500 text-white rounded-xl font-black transition-all shadow-lg shadow-indigo-500/20 active:scale-[0.98]"
-            >
-              Publicar Crónica
-            </button>
+            <div className="pt-4">
+              <button 
+                type="submit"
+                className="w-full py-4 bg-sky-700 hover:bg-sky-600 text-white font-bold uppercase tracking-widest text-xs transition-all rounded"
+              >
+                Confirmar Publicación
+              </button>
+            </div>
           </form>
         </motion.div>
       </div>
