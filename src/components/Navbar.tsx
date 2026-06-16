@@ -6,7 +6,6 @@ import Image from 'next/image';
 import { useAuth } from '@/context/AuthContext';
 import { usePathname } from 'next/navigation';
 import { motion, AnimatePresence } from 'framer-motion';
-import { fetchApi } from '@/services/api';
 
 export default function Navbar() {
   const { logout, user, isLoading } = useAuth();
@@ -17,6 +16,12 @@ export default function Navbar() {
   if (pathname === '/login' || pathname === '/register') return null;
 
   const isAdminOrSuper = !isLoading && (user?.role === 'ADMIN' || user?.role === 'SUPERADMIN');
+
+  // Lógica manejada centralmente en el AuthContext
+  const handleLogout = async () => {
+    setIsOpen(false);
+    await logout();
+  };
 
   return (
     <motion.nav 
@@ -29,7 +34,6 @@ export default function Navbar() {
         {/* Logo Institucional */}
         <Link href="/dashboard" className="flex items-center gap-3 group">
           <div className="relative w-10 h-10 overflow-hidden rounded">
-            {/* Asegúrate de tener tu imagen en public/images/imagen.jpg */}
             <Image 
               src="/images/imagen.jpg" 
               alt="Logo" 
@@ -51,17 +55,20 @@ export default function Navbar() {
           </ul>
 
           {isAdminOrSuper && (
-            <Link href="/chronicles/create" className="bg-sky-700 hover:bg-sky-800 text-white px-4 py-2 rounded text-sm transition-colors">
-              Subir Publicación
-            </Link>
-          )}
-           {isAdminOrSuper && (
-            <Link href="/admin" className="bg-sky-700 hover:bg-sky-800 text-white px-4 py-2 rounded text-sm transition-colors">
-              Admin Panel
-            </Link>
+            <>
+              <Link href="/chronicles/create" className="bg-sky-700 hover:bg-sky-800 text-white px-4 py-2 rounded text-sm transition-colors">
+                Subir Publicación
+              </Link>
+              <Link href="/admin" className="bg-sky-700 hover:bg-sky-800 text-white px-4 py-2 rounded text-sm transition-colors">
+                Admin Panel
+              </Link>
+            </>
           )}
 
-          <button onClick={() => { logout(); window.location.href = '/login'; }} className="text-slate-400 hover:text-white text-sm transition-colors">
+          <button 
+            onClick={handleLogout} 
+            className="text-slate-400 hover:text-white text-sm transition-colors"
+          >
             Salir
           </button>
         </div>
@@ -85,27 +92,18 @@ export default function Navbar() {
               <Link href="/dashboard" onClick={() => setIsOpen(false)}>Inicio</Link>
               <Link href="/cronicas" onClick={() => setIsOpen(false)}>Artículos</Link>
               
-              {/* Botón de subida para Admin en móvil */}
               {isAdminOrSuper && (
-                <Link 
-                  href="/chronicles/create" 
-                  onClick={() => setIsOpen(false)}
-                  className="text-sky-400 font-semibold"
-                >
-                  Subir Publicación
-                </Link>
-              )}
-               {isAdminOrSuper && (
-                <Link 
-                  href="/admin" 
-                  onClick={() => setIsOpen(false)}
-                  className="text-sky-400 font-semibold"
-                >
-                  Admin Panel
-                </Link>
+                <>
+                  <Link href="/chronicles/create" onClick={() => setIsOpen(false)} className="text-sky-400 font-semibold">
+                    Subir Publicación
+                  </Link>
+                  <Link href="/admin" onClick={() => setIsOpen(false)} className="text-sky-400 font-semibold">
+                    Admin Panel
+                  </Link>
+                </>
               )}
               
-              <button onClick={() => { logout(); setIsOpen(false); }} className="text-left text-red-400">
+              <button onClick={handleLogout} className="text-left text-red-400">
                 Salir
               </button>
             </div>
