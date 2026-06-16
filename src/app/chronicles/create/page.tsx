@@ -2,7 +2,6 @@
 import { useState } from 'react';
 import { useRouter } from 'next/navigation';
 import { fetchApi } from '@/services/api';
-import { useAuth } from '@/context/AuthContext';
 import { supabase } from '@/lib/supabaseClient';
 import ProtectedRoute from '@/components/ProtectedRoute';
 import { toast } from 'sonner';
@@ -29,7 +28,6 @@ export default function CreateChroniclePage() {
       const filePath = `uploads/${fileName}`;
 
       // 2. Subir a Supabase Storage
-      // Asegúrate de que el nombre del bucket sea EXACTAMENTE igual al de tu panel
       const { error: uploadError } = await supabase.storage
         .from('Documentos') 
         .upload(filePath, file, {
@@ -42,12 +40,12 @@ export default function CreateChroniclePage() {
         throw new Error(uploadError.message || "Error al subir el archivo");
       }
 
-      // 3. Enviar datos a tu API (incluyendo la ruta del archivo)
+      // 3. Enviar datos a tu API (incluyendo title, author, content y file_path)
       await fetchApi('/revista', {
         method: 'POST',
         body: JSON.stringify({ 
           ...form, 
-          file_path: filePath // Esta ruta es la que guardas en la BD
+          file_path: filePath 
         }),
       });
 
@@ -71,6 +69,7 @@ export default function CreateChroniclePage() {
           </div>
 
           <form onSubmit={handleSubmit} className="bg-[#0e243d] border border-white/5 p-10 rounded shadow-2xl space-y-8">
+            {/* Título */}
             <div className="space-y-3">
               <label className="text-[11px] font-bold text-slate-400 uppercase tracking-[0.2em]">Título</label>
               <input 
@@ -81,6 +80,18 @@ export default function CreateChroniclePage() {
               />
             </div>
 
+            {/* Autor */}
+            <div className="space-y-3">
+              <label className="text-[11px] font-bold text-slate-400 uppercase tracking-[0.2em]">Autor</label>
+              <input 
+                required
+                className="w-full p-4 bg-[#0b1b2e] border border-white/10 text-white rounded outline-none focus:border-sky-500"
+                value={form.author}
+                onChange={(e) => setForm({...form, author: e.target.value})}
+              />
+            </div>
+
+            {/* Archivo */}
             <div className="space-y-3">
               <label className="text-[11px] font-bold text-slate-400 uppercase tracking-[0.2em]">Archivo (PDF, Word, PPT)</label>
               <input 
@@ -92,6 +103,7 @@ export default function CreateChroniclePage() {
               />
             </div>
 
+            {/* Contenido */}
             <div className="space-y-3">
               <label className="text-[11px] font-bold text-slate-400 uppercase tracking-[0.2em]">Contenido</label>
               <textarea 
