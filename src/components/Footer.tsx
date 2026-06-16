@@ -10,43 +10,51 @@ export default function Footer() {
   ];
 
   return (
-    <footer className="site-footer">
-      <div className="container" style={{ paddingBlock: 'var(--space-12)' }}>
-        
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-12">
+    <footer className="site-footer border-t border-color-divider mt-auto">
+      <div className="container py-16">
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-12">
           
           {/* Info Revista */}
-          <div className="md:col-span-1">
-            <h3 className="font-display italic text-lg mb-4">Saberes Politécnicos</h3>
-            <p className="text-sm text-color-text-muted mb-6">
-              Revista científica de acceso abierto. 
-              Universidad Politécnica Territorial del Estado Aragua (UPTA).
-            </p>
-            <p className="text-xs text-color-text-faint">
-              Desarrollado para la comunidad universitaria.
+          <div className="space-y-4">
+            <h3 className="font-sans font-bold text-lg tracking-tight">Saberes Politécnicos</h3>
+            <p className="text-sm text-color-text-muted max-w-sm leading-relaxed">
+              Revista científica digital de acceso abierto. 
+              Comprometidos con la difusión del conocimiento técnico de la 
+              <span className="font-semibold text-color-primary"> UPTA</span>.
             </p>
           </div>
 
-          {/* Enlaces de contacto (Discretos) */}
-          <div className="md:col-span-2 flex flex-col md:flex-row gap-8 md:justify-end">
+          {/* Contacto con estilo */}
+          <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
             {contactLinks.map((item) => (
               <a
                 key={item.name}
                 href={item.url}
                 target="_blank"
-                className="flex items-center gap-3 text-color-text-muted hover:text-color-primary transition-colors"
+                className="group flex items-center gap-3 p-3 rounded-lg hover:bg-color-divider/20 transition-all duration-300"
               >
-                <item.icon size={16} />
-                <span className="text-sm">{item.label}</span>
+                <div className="text-color-text-faint group-hover:text-color-primary transition-colors">
+                  <item.icon size={18} />
+                </div>
+                <div className="flex flex-col">
+                  <span className="text-[10px] uppercase tracking-widest text-color-text-faint">{item.name}</span>
+                  <span className="text-xs font-mono text-color-text-muted">{item.label}</span>
+                </div>
               </a>
             ))}
           </div>
         </div>
 
         {/* Footer Inferior */}
-        <div className="mt-12 pt-8 border-t border-color-divider flex flex-col md:flex-row justify-between items-center gap-4 text-color-text-faint text-xs">
-          <p>© {new Date().getFullYear()} UPTA — Saberes Politécnicos</p>
-          <p>Gestión técnica por Jorge Tovar</p>
+        <div className="mt-16 pt-8 border-t border-color-divider flex flex-col md:flex-row justify-between items-center gap-6">
+          <p className="text-[11px] text-color-text-faint font-mono">
+            © {new Date().getFullYear()} UPTA — DERECHOS RESERVADOS
+          </p>
+          <div className="flex items-center gap-2 text-[11px] text-color-text-muted">
+            <span>GESTIÓN TÉCNICA</span>
+            <span className="w-1 h-1 rounded-full bg-color-primary"></span>
+            <span className="font-mono font-bold tracking-tight">JORGE TOVAR</span>
+          </div>
         </div>
       </div>
     </footer>

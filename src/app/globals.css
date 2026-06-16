@@ -1,11 +1,11 @@
 @import "tailwindcss";
 
-/* Esto se carga primero que nada y se mantendrá fijo */
 body {
-  background-color: #030711; /* Equivalente a gray-950 */
-  color: white;
+  background-color: #c8cedf;
+  color: rgb(0, 0, 0);
 }
-@theme inline {
+
+@theme {
   --font-sans: var(--font-geist-sans);
   --font-mono: var(--font-geist-mono);
 }

@@ -30,16 +30,16 @@ export default function Navbar() {
 
   return (
     <motion.nav 
-      initial={{ y: -20, opacity: 0 }} 
+      initial={{ y: -10, opacity: 0 }} 
       animate={{ y: 0, opacity: 1 }}
       className="site-header"
     >
       <div className="header-inner">
-        {/* Logo Académico */}
-        <Link href="/dashboard" className="logo-link">
-          <svg className="logo-svg" viewBox="0 0 180 40" fill="currentColor">
-            <text x="0" y="20" font-family="'Instrument Serif', Georgia, serif" font-size="16" font-weight="400">Saberes</text>
-            <text x="0" y="33" font-family="'Source Sans 3', sans-serif" font-size="9" font-weight="600" letter-spacing="1.2">POLITÉCNICOS</text>
+        {/* Logo con efecto hover */}
+        <Link href="/dashboard" className="logo-link group">
+          <svg className="logo-svg transition-transform group-hover:scale-[1.02]" viewBox="0 0 180 40" fill="currentColor">
+            <text x="0" y="20" font-family="var(--font-geist-sans)" font-size="18" font-weight="700">Saberes</text>
+            <text x="0" y="33" font-family="var(--font-geist-mono)" font-size="9" font-weight="500" letter-spacing="1.5" className="text-color-primary">POLITÉCNICOS</text>
           </svg>
         </Link>
 
@@ -47,36 +47,40 @@ export default function Navbar() {
         <button 
           className="mobile-menu-btn md:hidden" 
           onClick={() => setIsOpen(!isOpen)}
-          aria-expanded={isOpen}
         >
-          <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
-            {isOpen ? <path d="M18 6L6 18M6 6l12 12" /> : <path d="M3 12h18M3 6h18M3 18h18" />}
-          </svg>
+          <div className={`hamburger ${isOpen ? 'open' : ''}`} />
         </button>
 
-        {/* Menú principal */}
+        {/* Menú Principal */}
         <div className={`main-nav ${isOpen ? 'open' : ''}`}>
-          <ul className="nav-list" role="list">
-            <li><Link href="/dashboard" className={`nav-link ${pathname === '/dashboard' ? 'active' : ''}`}>Inicio</Link></li>
-            <li><Link href="/articulos" className={`nav-link ${pathname === '/articulos' ? 'active' : ''}`}>Artículos</Link></li>
+          <ul className="nav-list font-sans" role="list">
+            <li>
+              <Link href="/dashboard" className={`nav-link relative ${pathname === '/dashboard' ? 'active' : ''}`}>
+                Inicio
+                <span className="absolute bottom-0 left-0 h-0.5 bg-primary w-0 transition-all duration-300 group-hover:w-full" />
+              </Link>
+            </li>
+            <li>
+              <Link href="/articulos" className={`nav-link ${pathname === '/articulos' ? 'active' : ''}`}>
+                Artículos
+              </Link>
+            </li>
             
-            {/* Opción restringida: Subir Revista */}
             {isAdminOrSuper && (
               <li>
-                <Link href="/admin/upload" className="nav-link font-bold text-accent">
-                  Subir Publicación
+                <Link href="/admin/upload" className="nav-link font-semibold text-accent hover:opacity-80 transition-opacity flex items-center gap-1">
+                  <span className="text-lg">+</span> Subir Publicación
                 </Link>
               </li>
             )}
           </ul>
 
-          {/* Acciones */}
           <div className="header-actions">
             <button 
               onClick={handleLogout} 
-              className="btn btn-secondary text-xs px-5 py-2"
+              className="btn btn-secondary px-6 py-2 hover:bg-primary hover:text-white transition-all duration-300 font-medium tracking-wide"
             >
-              CERRAR SESIÓN
+              SALIR
             </button>
           </div>
         </div>
