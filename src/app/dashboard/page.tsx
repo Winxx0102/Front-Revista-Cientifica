@@ -27,7 +27,7 @@ export default function DashboardPage() {
   useEffect(() => {
     const loadData = async () => {
       try {
-        const data = await fetchApi('/chronicles');
+        const data = await fetchApi('/revista');
         setChronicles(Array.isArray(data) ? data : []);
       } catch (err) {
         console.error("Error al cargar crónicas:", err);

@@ -29,7 +29,7 @@ export default function MyChroniclesPage() {
     const loadMyChronicles = async () => {
       try {
         setLoading(true);
-        const data = await fetchApi('/chronicles/my/list');
+        const data = await fetchApi('/revista/my/list');
         setMyChronicles(Array.isArray(data) ? data : []);
       } catch (err) {
         console.error("Error al cargar crónicas:", err);

@@ -5,14 +5,13 @@ import Link from 'next/link';
 import { useAuth } from '@/context/AuthContext';
 import { usePathname } from 'next/navigation';
 import { motion, AnimatePresence } from 'framer-motion';
-import { fetchApi } from '@/services/api'; // Asegúrate de tener este import
+import { fetchApi } from '@/services/api';
 
 export default function Navbar() {
   const { logout, user, isLoading } = useAuth();
   const pathname = usePathname();
   const [isOpen, setIsOpen] = useState(false);
 
-  // No mostrar navbar en login/registro
   if (pathname === '/login' || pathname === '/register') return null;
 
   const isAdminOrSuper = !isLoading && (user?.role === 'ADMIN' || user?.role === 'SUPERADMIN');
@@ -20,12 +19,10 @@ export default function Navbar() {
 
   const handleLogout = async () => {
     try {
-      // 1. Llamada al backend para destruir la cookie 'jwt' en el servidor
       await fetchApi('/auth/logout', { method: 'GET' });
     } catch (error) {
-      console.error("Error al cerrar sesión en el servidor");
+      console.error("Error al cerrar sesión");
     } finally {
-      // 2. Limpiar contexto y recargar para forzar estado limpio
       logout();
       setIsOpen(false);
       window.location.href = '/login';
@@ -34,73 +31,57 @@ export default function Navbar() {
 
   return (
     <motion.nav 
-      initial={{ y: -100 }} 
-      animate={{ y: 0 }} 
-      className="sticky top-0 w-full bg-gray-950/60 backdrop-blur-xl border-b border-white/5 z-50"
+      initial={{ y: -20, opacity: 0 }} 
+      animate={{ y: 0, opacity: 1 }}
+      className="site-header"
     >
-      <div className="max-w-7xl mx-auto px-6 py-4 flex justify-between items-center">
-        
-        {/* Logo */}
-        <Link href="/dashboard" className="text-2xl font-black text-white tracking-tighter">
-          Nex<span className="text-indigo-500">Chron</span>
+      <div className="header-inner">
+        {/* Logo con diseño editorial */}
+        <Link href="/dashboard" className="logo-link">
+          <svg className="logo-svg" viewBox="0 0 180 40" fill="currentColor">
+            <text x="0" y="20" font-family="Instrument Serif" font-size="16" font-weight="400">Saberes</text>
+            <text x="0" y="33" font-family="Source Sans 3" font-size="9" font-weight="600" letter-spacing="1.2">POLITÉCNICOS</text>
+          </svg>
         </Link>
 
-        {/* Botón Hamburguesa (Móvil) */}
+        {/* Botón Hamburguesa */}
         <button 
-          className="md:hidden text-white p-2 hover:bg-white/10 rounded-lg transition-colors" 
+          className="mobile-menu-btn md:hidden" 
           onClick={() => setIsOpen(!isOpen)}
         >
           {isOpen ? '✕' : '☰'}
         </button>
 
-        {/* Menú de navegación */}
+        {/* Menú de navegación adaptado */}
         <AnimatePresence>
-          {(isOpen || typeof window !== 'undefined' && window.innerWidth >= 768) && (
-            <motion.div 
-              initial={isOpen ? { opacity: 0, height: 0 } : false}
-              animate={{ opacity: 1, height: 'auto' }}
-              exit={{ opacity: 0, height: 0 }}
-              className={`
-                ${isOpen ? 'absolute top-full left-0 w-full bg-gray-950/95 border-b border-white/10 p-6 flex flex-col space-y-6' : 'hidden'}
-                md:flex md:static md:w-auto md:bg-transparent md:p-0 md:flex-row md:space-y-0 md:space-x-8 items-center
-              `}
-            >
-              <Link 
-                href="/my-chronicles" 
-                onClick={() => setIsOpen(false)}
-                className="text-gray-400 hover:text-white transition-colors uppercase text-xs font-bold tracking-widest"
-              >
-                Crónicas
-              </Link>
+          <motion.div 
+            className={`main-nav ${isOpen ? 'open' : ''}`}
+            initial={false}
+          >
+            <ul className="nav-list">
+              <li><Link href="/dashboard" className="nav-link">Inicio</Link></li>
+              <li><Link href="/articulos" className="nav-link">Artículos</Link></li>
               
-              {!isBlocked && (
-                <Link 
-                  href="/chronicles/create" 
-                  onClick={() => setIsOpen(false)}
-                  className="text-gray-400 hover:text-white transition-colors uppercase text-xs font-bold tracking-widest"
-                >
-                  Crear
-                </Link>
-              )}
-              
+              {/* Opción restringida solo para Admins */}
               {isAdminOrSuper && (
-                <Link 
-                  href="/admin" 
-                  onClick={() => setIsOpen(false)}
-                  className="bg-indigo-500/10 text-indigo-400 border border-indigo-500/20 hover:border-indigo-500/50 px-4 py-2 rounded-xl transition-all font-bold text-xs"
-                >
-                  ADMIN PANEL
-                </Link>
+                <li>
+                  <Link href="/admin/upload" className="nav-link text-primary font-semibold">
+                    Subir Revista
+                  </Link>
+                </li>
               )}
-              
-              <button 
-                onClick={handleLogout} 
-                className="bg-white hover:bg-gray-200 text-black px-5 py-2 rounded-xl transition-all font-bold text-xs"
-              >
-                SALIR
-              </button>
-            </motion.div>
-          )}
+
+              {/* Botón Salir con estilo académico */}
+              <li>
+                <button 
+                  onClick={handleLogout} 
+                  className="btn btn-secondary text-xs py-1 px-4 ml-4"
+                >
+                  CERRAR SESIÓN
+                </button>
+              </li>
+            </ul>
+          </motion.div>
         </AnimatePresence>
       </div>
     </motion.nav>

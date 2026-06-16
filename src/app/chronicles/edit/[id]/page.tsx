@@ -36,7 +36,7 @@ export default function EditChroniclePage() {
 
   useEffect(() => {
     if (id && user) {
-      fetchApi(`/chronicles/${id}`)
+      fetchApi(`/revista/${id}`)
         .then((data) => {
           setFormData({ title: data.title, content: data.content });
           setLoading(false);
@@ -53,14 +53,14 @@ export default function EditChroniclePage() {
     const loadingToast = toast.loading("Guardando cambios...");
 
     try {
-      await fetchApi(`/chronicles/${id}`, {
+      await fetchApi(`/revista/${id}`, {
         method: 'PATCH',
         body: JSON.stringify(formData),
       });
 
       toast.dismiss(loadingToast);
       toast.success('¡Crónica actualizada con éxito!');
-      router.push(`/chronicles/${id}`);
+      router.push(`/revista/${id}`);
     } catch (err: unknown) {
       toast.dismiss(loadingToast);
       toast.error('Error al actualizar.');
@@ -74,7 +74,7 @@ export default function EditChroniclePage() {
         label: "Eliminar definitivamente",
         onClick: async () => {
           try {
-            await fetchApi(`/chronicles/${id}`, { method: 'DELETE' });
+            await fetchApi(`/revista/${id}`, { method: 'DELETE' });
             toast.success('Crónica eliminada correctamente');
             router.push('/dashboard');
           } catch {

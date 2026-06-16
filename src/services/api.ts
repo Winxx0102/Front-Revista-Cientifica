@@ -1,4 +1,4 @@
-const API_BASE = process.env.NEXT_PUBLIC_API_URL || 'https://nexchorn-back.onrender.com';
+const API_BASE = process.env.NEXT_PUBLIC_API_URL || 'https://revista-cientifica-by-winxx0102.onrender.com';
 
 export const fetchApi = async (endpoint: string, options: RequestInit = {}) => {
   const url = `${API_BASE}${endpoint.startsWith('/') ? endpoint : `/${endpoint}`}`;

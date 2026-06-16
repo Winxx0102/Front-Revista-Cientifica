@@ -24,7 +24,7 @@ export default function ChronicleDetailPage() {
   useEffect(() => {
     const id = params?.id;
     if (!id) return;
-    fetchApi(`/chronicles/${id}`)
+    fetchApi(`/revista/${id}`)
       .then((data) => { setChronicle(data); setLoading(false); })
       .catch(() => setLoading(false));
   }, [params.id]);

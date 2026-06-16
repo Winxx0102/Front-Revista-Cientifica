@@ -15,7 +15,7 @@ export default function CreateChroniclePage() {
     const loadingToast = toast.loading("Publicando tu crónica...");
 
     try {
-      await fetchApi('/chronicles', {
+      await fetchApi('/revista', {
         method: 'POST',
         body: JSON.stringify(form),
       });
