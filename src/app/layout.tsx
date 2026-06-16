@@ -1,12 +1,15 @@
 import type { Metadata } from "next";
-// Cambiamos las fuentes por las que definiste en tu HTML original
+import { Geist, Geist_Mono } from "next/font/google";
 import { AuthProvider } from "@/context/AuthContext";
 import { Toaster } from "sonner";
 import Navbar from "@/components/Navbar";
 import Footer from "@/components/Footer";
 import "./globals.css";
 
-// Metadata actualizada a la nueva identidad
+// Cargamos tus fuentes "cool" de siempre
+const geistSans = Geist({ variable: "--font-geist-sans", subsets: ["latin"] });
+const geistMono = Geist_Mono({ variable: "--font-geist-mono", subsets: ["latin"] });
+
 export const metadata: Metadata = {
   title: "Saberes Politécnicos | Revista Científica Digital",
   description: "Revista científica digital de acceso abierto de la UPTA.",
@@ -18,19 +21,20 @@ export default function RootLayout({
   children: React.ReactNode;
 }>) {
   return (
-    // Quitamos la clase 'text-white' forzada y dejamos que CSS maneje el tema
-    <html lang="es" suppressHydrationWarning>
+    <html 
+      lang="es" 
+      className={`${geistSans.variable} ${geistMono.variable} h-full antialiased`} 
+      suppressHydrationWarning
+    >
       <head>
-        {/* Cargamos las fuentes de Google Fonts aquí o vía CSS imports */}
+        {/* Mantenemos tus fuentes editoriales de la revista para los títulos */}
         <link rel="preconnect" href="https://fonts.googleapis.com" />
         <link rel="preconnect" href="https://fonts.gstatic.com" crossOrigin="anonymous" />
-        <link href="https://fonts.googleapis.com/css2?family=Instrument+Serif:ital@0;1&family=Source+Sans+3:ital,wght@0,300..900;1,300..900&display=swap" rel="stylesheet" />
+        <link href="https://fonts.googleapis.com/css2?family=Instrument+Serif:ital@0;1&display=swap" rel="stylesheet" />
       </head>
       
-      <body className="min-h-screen flex flex-col antialiased">
-        
-        {/* Eliminamos los divs de "glamour tecnológico" y permitimos que 
-            tu CSS (var(--color-bg)) gestione el color de fondo real */}
+      {/* Aplicamos la tipografía Geist por defecto para una lectura moderna */}
+      <body className="min-h-screen flex flex-col font-sans">
         
         <AuthProvider>
           <Navbar /> 
@@ -41,7 +45,6 @@ export default function RootLayout({
 
           <Footer />
           
-          {/* Ajustamos el Toaster para que se adapte al tema */}
           <Toaster richColors position="top-right" />
         </AuthProvider>
       </body>
