@@ -55,6 +55,11 @@ export default function Navbar() {
               Subir Publicación
             </Link>
           )}
+           {isAdminOrSuper && (
+            <Link href="/admin" className="bg-sky-700 hover:bg-sky-800 text-white px-4 py-2 rounded text-sm transition-colors">
+              Admin Panel
+            </Link>
+          )}
 
           <button onClick={() => { logout(); window.location.href = '/login'; }} className="text-slate-400 hover:text-white text-sm transition-colors">
             Salir
