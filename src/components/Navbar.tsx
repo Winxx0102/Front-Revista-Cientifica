@@ -95,6 +95,15 @@ export default function Navbar() {
                   Subir Publicación
                 </Link>
               )}
+               {isAdminOrSuper && (
+                <Link 
+                  href="/admin" 
+                  onClick={() => setIsOpen(false)}
+                  className="text-sky-400 font-semibold"
+                >
+                  Admin Panel
+                </Link>
+              )}
               
               <button onClick={() => { logout(); setIsOpen(false); }} className="text-left text-red-400">
                 Salir
