@@ -2,10 +2,7 @@
 
 /* Fondo oscuro profesional estilo revista científica */
 body {
- background-color: #0b1a2d; /* Un fondo base aún más oscuro que tu original */
-background-image: 
-  radial-gradient(at 20% 20%, rgba(18, 43, 74, 0.6) 0px, transparent 50%),
-  radial-gradient(at 80% 40%, rgba(32, 117, 148, 0.3) 0px, transparent 40%);
+ background-color: #07101d; /* Un fondo base aún más oscuro que tu original */
   color: #f8fafc;
 }
 
