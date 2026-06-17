@@ -51,7 +51,7 @@ export default function Navbar() {
         <div className="hidden md:flex items-center gap-8">
           <ul className="flex items-center gap-6 text-sm font-medium text-slate-300">
             <li><Link href="/dashboard" className="hover:text-white transition-colors">Inicio</Link></li>
-            <li><Link href="/cronicas" className="hover:text-white transition-colors">Artículos</Link></li>
+    
           </ul>
 
           {isAdminOrSuper && (
@@ -61,6 +61,9 @@ export default function Navbar() {
               </Link>
               <Link href="/admin" className="bg-sky-700 hover:bg-sky-800 text-white px-4 py-2 rounded text-sm transition-colors">
                 Admin Panel
+              </Link>
+               <Link href="https://upta.edu.ve/" className="bg-sky-700 hover:bg-sky-800 text-white px-4 py-2 rounded text-sm transition-colors">
+                Portal UPTA
               </Link>
             </>
           )}
@@ -90,7 +93,7 @@ export default function Navbar() {
           >
             <div className="flex flex-col p-6 gap-4 text-slate-300">
               <Link href="/dashboard" onClick={() => setIsOpen(false)}>Inicio</Link>
-              <Link href="/cronicas" onClick={() => setIsOpen(false)}>Artículos</Link>
+          
               
               {isAdminOrSuper && (
                 <>
