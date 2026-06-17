@@ -40,7 +40,7 @@ export default function RegisterPage() {
         
         {/* Contenedor Editorial */}
         <div className="flex-1 text-left space-y-6">
-          <h1 className="text-6xl font-serif italic text-white leading-tight">
+          <h1 className="text-6xl md:text-7xl font-serif italic text-white leading-tight tracking-tight">
             Solicitar<br />Acceso
           </h1>
           <p className="text-slate-400 text-lg leading-relaxed max-w-lg">
