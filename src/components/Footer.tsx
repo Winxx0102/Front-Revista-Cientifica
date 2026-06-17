@@ -1,58 +1,53 @@
 'use client';
 
-import { FaGithub, FaWhatsapp, FaEnvelope } from 'react-icons/fa';
+import { FaGithub, FaEnvelope } from 'react-icons/fa';
 
 export default function Footer() {
-  const contactLinks = [
-    { name: 'WhatsApp', icon: FaWhatsapp, url: 'https://wa.me/584163670993', label: '+58 416 3670993' },
-    { name: 'GitHub', icon: FaGithub, url: 'https://github.com/Winxx0102', label: '@Winxx0102' },
-    { name: 'Email', icon: FaEnvelope, url: 'mailto:olowixtovar@gmail.com', label: 'olowixtovar@gmail.com' },
+  // Rutas de navegación rápida
+  const navLinks = [
+    { name: 'Inicio', url: '/dashboard' },
+    { name: 'Artículos', url: '/revista' },
+    { name: 'Convocatoria', url: '/convocatoria' },
   ];
 
   return (
-    // Fondo azul profundo institucional
-    <footer className="bg-[#0b1b2e] border-t border-white/10 mt-auto text-slate-300">
-      <div className="max-w-6xl mx-auto px-6 py-16">
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-12">
+    <footer className="bg-[#0b1b2e] border-t border-white/5 mt-auto text-slate-400">
+      <div className="max-w-6xl mx-auto px-6 py-12">
+        <div className="flex flex-col md:flex-row justify-between items-start gap-12">
           
           {/* Info Revista */}
           <div className="space-y-4">
             <h3 className="font-bold text-white text-lg tracking-tight">Saberes Politécnicos</h3>
-            <p className="text-sm text-slate-400 max-w-sm leading-relaxed">
-              Revista científica digital de acceso abierto. 
-              Comprometidos con la difusión del conocimiento técnico de la 
-              <span className="font-semibold text-white"> UPTA</span>.
+            <p className="text-xs max-w-xs leading-relaxed">
+              Revista científica digital de acceso abierto. Comprometidos con la difusión del conocimiento técnico de la UPTA.
             </p>
           </div>
 
-          {/* Contacto simple y elegante */}
-          <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
-            {contactLinks.map((item) => (
-              <a
-                key={item.name}
-                href={item.url}
-                target="_blank"
-                className="flex items-center gap-3 p-2 hover:text-white transition-colors"
-              >
-                <item.icon size={18} />
-                <div className="flex flex-col">
-                  <span className="text-[10px] uppercase tracking-widest text-slate-500">{item.name}</span>
-                  <span className="text-xs font-mono">{item.label}</span>
-                </div>
+          {/* Navegación */}
+          <div className="flex flex-col gap-2">
+            <span className="text-[10px] font-bold text-slate-600 uppercase tracking-widest mb-2">Navegación</span>
+            {navLinks.map((link) => (
+              <a key={link.name} href={link.url} className="text-sm hover:text-white transition-colors">
+                {link.name}
               </a>
             ))}
           </div>
         </div>
 
-        {/* Footer Inferior */}
-        <div className="mt-16 pt-8 border-t border-white/5 flex flex-col md:flex-row justify-between items-center gap-6 text-slate-500">
-          <p className="text-[11px] font-mono">
-            © {new Date().getFullYear()} UPTA — DERECHOS RESERVADOS
-          </p>
-          <div className="flex items-center gap-2 text-[11px]">
-            <span>GESTIÓN TÉCNICA</span>
-            <span className="w-1 h-1 rounded-full bg-slate-700"></span>
-            <span className="font-mono tracking-tight text-slate-400">JORGE TOVAR</span>
+        {/* Footer Inferior: Gestión Técnica Minimalista */}
+        <div className="mt-16 pt-8 border-t border-white/5 flex flex-col md:flex-row justify-between items-center gap-6 text-[10px] text-slate-600">
+          <p className="font-mono">© {new Date().getFullYear()} UPTA — DERECHOS RESERVADOS</p>
+          
+          <div className="flex items-center gap-4">
+            <span>GESTIÓN TÉCNICA: JORGE TOVAR</span>
+            <div className="flex items-center gap-3">
+              <a href="https://github.com/Winxx0102" target="_blank" className="hover:text-white transition-colors">
+                <FaGithub size={12} />
+              </a>
+              <a href="mailto:olowixtovar@gmail.com" className="hover:text-white transition-colors">
+                <FaEnvelope size={12} />
+              </a>
+            </div>
           </div>
         </div>
       </div>
