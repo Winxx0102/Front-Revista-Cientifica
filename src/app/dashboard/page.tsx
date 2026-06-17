@@ -25,7 +25,7 @@ export default function DashboardPage() {
   useEffect(() => {
     const loadChronicles = async () => {
       try {
-        const data = await fetchApi('/chronicles');
+        const data = await fetchApi('/revista');
         if (Array.isArray(data)) {
           setChronicles(
             data.map((item: Chronicle) => ({
