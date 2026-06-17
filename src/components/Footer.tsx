@@ -6,7 +6,7 @@ export default function Footer() {
   // Rutas de navegación rápida
   const navLinks = [
     { name: 'Inicio', url: '/dashboard' },
-    { name: 'Artículos', url: 'https://upta.edu.ve' },
+    { name: 'Portal UPTA', url: 'https://upta.edu.ve' },
   ];
 
   return (
