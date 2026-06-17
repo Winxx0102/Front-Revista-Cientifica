@@ -63,7 +63,7 @@ export default function CreateChroniclePage() {
   return ( 
     <AdminGuard> 
     <ProtectedRoute>
-      <div className="min-h-screen bg-[#0b1b2e] py-20 px-6">
+      <div className="min-h-screen py-20 px-6">
         <motion.div className="max-w-3xl mx-auto" initial={{ opacity: 0 }} animate={{ opacity: 1 }}>
           <div className="mb-12 border-l-2 border-sky-700 pl-6">
             <h1 className="text-4xl font-serif italic text-white mb-2">Subir Publicación</h1>

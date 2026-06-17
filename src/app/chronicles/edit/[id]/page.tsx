@@ -77,12 +77,12 @@ export default function EditChroniclePage() {
     });
   };
 
-  if (loading) return <div className="min-h-screen bg-[#0b1b2e] flex items-center justify-center text-slate-500 uppercase tracking-widest text-sm">Cargando editor...</div>;
+  if (loading) return <div className="min-h-screen flex items-center justify-center text-slate-500 uppercase tracking-widest text-sm">Cargando editor...</div>;
 
   return (
     <ProtectedRoute>
       <AdminGuard>
-        <div className="min-h-screen bg-[#0b1b2e] py-16 px-6">
+        <div className="min-h-screen  py-16 px-6">
           <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} className="max-w-3xl mx-auto">
             <h1 className="text-3xl font-serif italic text-white mb-8">Editar Publicación</h1>
             

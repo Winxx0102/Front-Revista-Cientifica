@@ -43,11 +43,11 @@ export default function ChronicleDetailPage() {
   };
 
   if (loading || authLoading) {
-    return <div className="min-h-screen bg-[#0b1b2e] flex items-center justify-center text-slate-500">Cargando crónica...</div>;
+    return <div className="min-h-screen  flex items-center justify-center text-slate-500">Cargando crónica...</div>;
   }
 
   if (!chronicle) {
-    return <div className="min-h-screen bg-[#0b1b2e] text-white flex items-center justify-center">Crónica no encontrada.</div>;
+    return <div className="min-h-screen  text-white flex items-center justify-center">Crónica no encontrada.</div>;
   }
 
   const fileUrl = getFileUrl(chronicle.file_path);
@@ -55,7 +55,7 @@ export default function ChronicleDetailPage() {
   const canEdit = !authLoading && (user?.role === 'ADMIN' || user?.role === 'SUPERADMIN');
 
   return (
-    <div className="min-h-screen bg-[#0b1b2e] py-16 px-6">
+    <div className="min-h-screen  py-16 px-6">
       <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} className="max-w-3xl mx-auto">
         <button 
           onClick={() => router.back()} 

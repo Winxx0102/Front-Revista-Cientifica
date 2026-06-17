@@ -10,9 +10,16 @@ import { FaSearch, FaInfoCircle } from 'react-icons/fa';
 // Definición de imágenes para el carrusel
 const carouselImages = ['/images/carrucel1xdd.jpeg', '/images/carrucel2xdd.jpeg'];
 
+type Chronicle = {
+  id?: string;
+  title?: string;
+  author?: string;
+  [key: string]: unknown;
+};
+
 export default function DashboardPage() {
   const { user } = useAuth();
-  const [chronicles, setChronicles] = useState<any[]>([]);
+  const [chronicles, setChronicles] = useState<Chronicle[]>(([] as Chronicle[]));
   const [search, setSearch] = useState('');
   const [filterBy, setFilterBy] = useState<'title' | 'author' | 'all'>('all');
   const [currentPage, setCurrentPage] = useState(1);
@@ -43,7 +50,7 @@ export default function DashboardPage() {
 
   return (
     <ProtectedRoute>
-      <div className="min-h-screen bg-[#0b1b2e] text-slate-200">
+      <div className="min-h-screen text-slate-200">
         <main className="max-w-7xl mx-auto px-6 py-16">
           
           {/* Carrusel Integrado */}

@@ -35,7 +35,7 @@ export default function RegisterPage() {
   };
 
   return (
-    <div className="min-h-screen flex items-center justify-center p-6 bg-[#0b1b2e]">
+    <div className="min-h-screen flex items-center justify-center p-6 ">
       <div className="max-w-5xl w-full flex flex-col md:flex-row items-center gap-16">
         
         {/* Contenedor Editorial */}
