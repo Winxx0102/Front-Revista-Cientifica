@@ -65,7 +65,7 @@ export default function DashboardPage() {
 
   return (
     <ProtectedRoute>
-      <div className="min-h-screen bg-[#0b1b2e] text-slate-200">
+      <div className="min-h-screen text-slate-200">
         <main className="max-w-7xl mx-auto px-6 py-16">
           
           {/* Carrusel */}
