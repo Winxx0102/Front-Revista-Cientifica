@@ -6,6 +6,7 @@ import { supabase } from '@/lib/supabaseClient';
 import ProtectedRoute from '@/components/ProtectedRoute';
 import { toast } from 'sonner';
 import { motion } from 'framer-motion';
+import AdminGuard from '@/components/AdminGuard';
 
 export default function CreateChroniclePage() {
   const router = useRouter();
@@ -59,7 +60,8 @@ export default function CreateChroniclePage() {
     }
   };
 
-  return (
+  return ( 
+    <AdminGuard> 
     <ProtectedRoute>
       <div className="min-h-screen bg-[#0b1b2e] py-20 px-6">
         <motion.div className="max-w-3xl mx-auto" initial={{ opacity: 0 }} animate={{ opacity: 1 }}>
@@ -122,5 +124,6 @@ export default function CreateChroniclePage() {
         </motion.div>
       </div>
     </ProtectedRoute>
+    </AdminGuard>
   );
 }

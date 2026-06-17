@@ -14,7 +14,6 @@ export default function UserActionMenu({ userRole, targetUser, currentUserId, on
   const [isOpen, setIsOpen] = useState(false);
   const menuRef = useRef<HTMLDivElement>(null);
 
-  // Cerrar menú al hacer clic fuera
   useEffect(() => {
     const handleClickOutside = (e: MouseEvent) => {
       if (menuRef.current && !menuRef.current.contains(e.target as Node)) setIsOpen(false);
@@ -23,13 +22,11 @@ export default function UserActionMenu({ userRole, targetUser, currentUserId, on
     return () => document.removeEventListener('mousedown', handleClickOutside);
   }, []);
 
-  // Lógica de permisos
   const roleUpper = userRole?.trim().toUpperCase();
   const isAdmin = roleUpper === 'ADMIN' || roleUpper === 'SUPERADMIN';
   const isSuperAdmin = roleUpper === 'SUPERADMIN';
   const isSelf = currentUserId === targetUser.id;
 
-  // Si no es admin, no renderizamos el botón en absoluto
   if (!isAdmin) return null;
 
   const handleRoleChange = (role: string) => {
@@ -47,38 +44,44 @@ export default function UserActionMenu({ userRole, targetUser, currentUserId, on
     <div className="relative inline-block" ref={menuRef}>
       <button 
         onClick={() => setIsOpen(!isOpen)}
-        className="px-3 py-1 bg-white/5 border border-white/10 hover:bg-white/10 text-white rounded-lg text-xs font-bold transition-all hover:scale-105 active:scale-95"
+        className={`px-4 py-1.5 rounded-full text-[10px] font-black uppercase tracking-widest transition-all duration-300 ${
+          isOpen 
+            ? 'bg-white text-gray-900' 
+            : 'bg-white/5 text-white border border-white/10 hover:bg-white/10'
+        }`}
       >
-        Gestionar
+        {isOpen ? 'Cerrar' : 'Gestionar'}
       </button>
 
       <AnimatePresence>
         {isOpen && (
           <motion.div 
-            initial={{ opacity: 0, y: 5, scale: 0.95 }} 
-            animate={{ opacity: 1, y: 0, scale: 1 }} 
-            exit={{ opacity: 0, y: 5, scale: 0.95 }}
-            className="absolute right-0 mt-2 w-48 bg-gray-900 border border-white/10 rounded-2xl shadow-2xl p-2 z-[60] overflow-hidden"
+            initial={{ opacity: 0, scale: 0.95, y: -10 }} 
+            animate={{ opacity: 1, scale: 1, y: 0 }} 
+            exit={{ opacity: 0, scale: 0.95, y: -10 }}
+            className="absolute right-0 mt-3 w-48 bg-gray-950/90 backdrop-blur-xl border border-white/10 rounded-2xl shadow-2xl p-2 z-[60]"
           >
-            {/* Bloqueo / Desbloqueo - Solo si no es el mismo usuario */}
             {!isSelf && (
               <button 
                 onClick={() => { onAction(targetUser.id, targetUser.isBlocked ? 'unblock' : 'block'); setIsOpen(false); }}
-                className={`w-full text-left px-3 py-2 text-sm rounded-lg transition-colors ${targetUser.isBlocked ? 'text-emerald-400 hover:bg-emerald-900/20' : 'text-red-400 hover:bg-red-900/20'}`}
+                className={`w-full text-left px-3 py-2 text-xs rounded-lg font-bold transition-colors ${
+                  targetUser.isBlocked 
+                    ? 'text-emerald-400 hover:bg-emerald-950/50' 
+                    : 'text-red-400 hover:bg-red-950/50'
+                }`}
               >
-                {targetUser.isBlocked ? 'Desbloquear usuario' : 'Bloquear usuario'}
+                {targetUser.isBlocked ? 'Desbloquear Usuario' : 'Bloquear Usuario'}
               </button>
             )}
 
-            {/* Gestión de Roles - Solo para Superadmins y no es el mismo usuario */}
             {isSuperAdmin && !isSelf && (
-              <div className="border-t border-white/5 mt-2 pt-2">
-                <p className="px-3 py-1 text-[10px] text-gray-500 uppercase tracking-widest font-black">Asignar Rol</p>
+              <div className="border-t border-white/5 mt-1 pt-1">
+                <p className="px-3 py-2 text-[9px] text-gray-500 font-bold uppercase tracking-[0.2em]">Asignar Nuevo Rol</p>
                 {['USER', 'ADMIN', 'SUPERADMIN'].map((role) => (
                   <button 
                     key={role}
                     onClick={() => handleRoleChange(role)}
-                    className="w-full text-left px-3 py-2 text-sm text-indigo-300 hover:bg-indigo-900/30 rounded-lg transition-colors"
+                    className="w-full text-left px-3 py-1.5 text-xs text-gray-300 hover:text-indigo-400 hover:bg-white/5 rounded-lg transition-all"
                   >
                     {role}
                   </button>

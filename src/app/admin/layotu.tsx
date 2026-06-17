@@ -1,4 +1,5 @@
 'use client';
+import AdminGuard from '@/components/AdminGuard';
 import { useAuth } from '@/context/AuthContext';
 import { useRouter, usePathname } from 'next/navigation';
 import { useEffect } from 'react';
@@ -21,17 +22,22 @@ export default function AdminLayout({ children }: { children: React.ReactNode })
   // 2. Pantalla de carga estética para evitar parpadeos
   if (isLoading || !user || (user.role !== 'ADMIN' && user.role !== 'SUPERADMIN')) {
     return (
+      
+      <AdminGuard>
       <div className="min-h-screen flex items-center justify-center bg-gray-950">
         <div className="text-indigo-400 font-black tracking-widest uppercase animate-pulse">
           Validando credenciales...
         </div>
       </div>
+      </AdminGuard>
     );
   }
 
   return (
+    <AdminGuard>
     <main className="max-w-7xl mx-auto p-6 animate-in fade-in duration-500">
       {children}
     </main>
+    </AdminGuard>
   );
 }
