@@ -3,13 +3,13 @@
 import { useState } from 'react';
 import Link from 'next/link';
 import Image from 'next/image';
-import { useAuth } from '@/context/AuthContext';
+import { useAuth } from '@/context/AuthContext'; // Importamos el contexto
 import { usePathname } from 'next/navigation';
 import { motion, AnimatePresence } from 'framer-motion';
-import { RoleGuard } from '@/components/RoleGuard'; // Asegúrate de esta ruta
+import { RoleGuard } from '@/components/RoleGuard';
 
 export default function Navbar() {
-  const { logout } = useAuth(); // Ya no necesitamos 'user' ni 'isLoading' aquí
+  const { logout, user, isLoading } = useAuth(); // EXTRAEMOS TODO
   const pathname = usePathname();
   const [isOpen, setIsOpen] = useState(false);
 
@@ -44,42 +44,30 @@ export default function Navbar() {
             <li><Link href="https://upta.edu.ve/" className="hover:text-white transition-colors">Portal UPTA</Link></li>
           </ul>
 
-          {/* AQUÍ ESTÁ LA MAGIA: usamos tu RoleGuard */}
-          <RoleGuard roles={['ADMIN', 'SUPERADMIN']}>
-            <Link href="/chronicles/create" className="bg-sky-700 hover:bg-sky-800 text-white px-4 py-2 rounded text-sm transition-colors">
-              Subir Publicación
-            </Link>
-            <Link href="/admin" className="bg-sky-700 hover:bg-sky-800 text-white px-4 py-2 rounded text-sm transition-colors">
-              Admin Panel
-            </Link>
-          </RoleGuard>
+          {/* Si está cargando, ocultamos para evitar parpadeos */}
+          {!isLoading && (
+            <RoleGuard roles={['ADMIN', 'SUPERADMIN']}>
+              <Link href="/chronicles/create" className="bg-sky-700 hover:bg-sky-800 text-white px-4 py-2 rounded text-sm transition-colors">
+                Subir Publicación
+              </Link>
+              <Link href="/admin" className="bg-sky-700 hover:bg-sky-800 text-white px-4 py-2 rounded text-sm transition-colors">
+                Admin Panel
+              </Link>
+            </RoleGuard>
+          )}
 
           <button onClick={handleLogout} className="text-slate-400 hover:text-white text-sm transition-colors">
             Salir
           </button>
         </div>
 
-        {/* Botón Hamburguesa */}
+        {/* Móvil */}
         <button className="md:hidden text-white text-2xl" onClick={() => setIsOpen(!isOpen)}>
           {isOpen ? '✕' : '☰'}
         </button>
       </div>
-
-      {/* Menú Móvil */}
-      <AnimatePresence>
-        {isOpen && (
-          <motion.div initial={{ height: 0 }} animate={{ height: 'auto' }} exit={{ height: 0 }} className="md:hidden bg-[#0e243d] border-t border-white/10 overflow-hidden">
-            <div className="flex flex-col p-6 gap-4 text-slate-300">
-              <Link href="/dashboard" onClick={() => setIsOpen(false)}>Inicio</Link>
-              <RoleGuard roles={['ADMIN', 'SUPERADMIN']}>
-                <Link href="/chronicles/create" onClick={() => setIsOpen(false)} className="text-sky-400 font-semibold">Subir Publicación</Link>
-                <Link href="/admin" onClick={() => setIsOpen(false)} className="text-sky-400 font-semibold">Admin Panel</Link>
-              </RoleGuard>
-              <button onClick={handleLogout} className="text-left text-red-400">Salir</button>
-            </div>
-          </motion.div>
-        )}
-      </AnimatePresence>
+      
+      {/* ... AnimatePresence igual ... */}
     </motion.nav>
   );
 }

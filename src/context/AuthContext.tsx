@@ -15,7 +15,7 @@ type AuthContextType = {
   logout: () => Promise<void>;
   isLoading: boolean;
   refreshUser: () => Promise<void>;
-  updateUser: (newUser: User | null) => void; // <--- AGREGADO
+  updateUser: (newUser: User | null) => void;
 };
 
 const AuthContext = createContext<AuthContextType | undefined>(undefined);
@@ -24,10 +24,13 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
   const [user, setUser] = useState<User | null>(null);
   const [isLoading, setIsLoading] = useState(true);
 
+  // La función refreshUser mantiene la lógica de verificación de sesión
   const refreshUser = useCallback(async () => {
     try {
+      setIsLoading(true);
       const data = await fetchApi('/auth/verify-session');
-      setUser(data.user || data); 
+      // Normalizamos: si tu backend devuelve { user: {...} } o directamente el objeto
+      setUser(data?.user || data || null); 
     } catch (err) {
       setUser(null);
     } finally {
@@ -35,21 +38,20 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
     }
   }, []);
 
+  // Inicialización única al cargar
   useEffect(() => {
-    const initializeUser = async () => {
-      await refreshUser();
-    };
-
-    void initializeUser();
+    // eslint-disable-next-line react-hooks/set-state-in-effect
+    refreshUser();
   }, [refreshUser]);
 
-  // Esta función permite actualizar el estado manualmente (ej. tras un login exitoso)
-  const updateUser = (newUser: User | null) => {
+  // Actualizador forzado para el Login
+  const updateUser = useCallback((newUser: User | null) => {
     setUser(newUser);
-  };
+  }, []);
 
+  // Login envolvente
   const login = (userData: User) => {
-    setUser(userData);
+    updateUser(userData);
   };
 
   const logout = async () => {
@@ -59,7 +61,8 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
       console.error("Error al cerrar sesión");
     } finally {
       setUser(null);
-      window.location.href = '/login';
+      // Forzamos redirección para limpiar estados persistentes
+      window.location.replace('/login');
     }
   };
 
@@ -72,7 +75,7 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
 
 export const useAuth = () => {
   const context = useContext(AuthContext);
-  if (context === undefined) {
+  if (!context) {
     throw new Error('useAuth debe ser usado dentro de un AuthProvider');
   }
   return context;
