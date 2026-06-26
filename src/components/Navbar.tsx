@@ -67,7 +67,25 @@ export default function Navbar() {
         </button>
       </div>
       
-      {/* ... AnimatePresence igual ... */}
+      <AnimatePresence>
+        {isOpen && (
+          <motion.div 
+            initial={{ height: 0, opacity: 0 }} 
+            animate={{ height: 'auto', opacity: 1 }} 
+            exit={{ height: 0, opacity: 0 }}
+            className="md:hidden bg-[#0e243d] border-t border-white/10 overflow-hidden"
+          >
+            <div className="flex flex-col p-6 gap-4 text-slate-300">
+              <Link href="/dashboard" onClick={() => setIsOpen(false)}>Inicio</Link>
+              <RoleGuard roles={['ADMIN', 'SUPERADMIN']}>
+                <Link href="/chronicles/create" onClick={() => setIsOpen(false)} className="text-sky-400 font-semibold">Subir Publicación</Link>
+                <Link href="/admin" onClick={() => setIsOpen(false)} className="text-sky-400 font-semibold">Admin Panel</Link>
+              </RoleGuard>
+              <button onClick={handleLogout} className="text-left text-red-400">Salir</button>
+            </div>
+          </motion.div>
+        )}
+      </AnimatePresence>
     </motion.nav>
   );
 }
