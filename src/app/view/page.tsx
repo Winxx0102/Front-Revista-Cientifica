@@ -26,19 +26,7 @@ export default function DashboardPage() {
   const [currentIndex, setCurrentIndex] = useState(0);
   const itemsPerPage = 6;
   
-  // Refresco controlado al entrar al Dashboard
-  useEffect(() => {
-    const hasRefreshed = sessionStorage.getItem('dashboardRefreshed');
-    
-    if (!hasRefreshed) {
-      sessionStorage.setItem('dashboardRefreshed', 'true');
-      window.location.reload();
-    }
-    
-    return () => {
-      sessionStorage.removeItem('dashboardRefreshed');
-    };
-  }, []);
+
 
   // Timer del carrusel
   useEffect(() => {
@@ -89,9 +77,9 @@ export default function DashboardPage() {
 
         {/* 5. EXPLORADOR E INTEGRACIÓN DE ARTÍCULOS ACTIVOS */}
         <div id="articulos" className="max-w-7xl mx-auto px-6 py-16">
-           <h1 className="text-5xl md:text-7xl font-serif italic text-white leading-tight tracking-tight">
-                Articulos Cientificos<br />Repositorios
-              </h1>
+           <h2 className="text-5xl md:text-7xl font-serif italic text-white leading-tight tracking-tight">
+                Articulos Cientificos<br />Repositorios <br />
+              </h2>
           {/* Banner de estadísticas dinámico */}
           <div className="bg-gradient-to-r from-[#0e243d] to-[#0b1b2e] border border-white/5 p-10 rounded-2xl mb-12 flex flex-col md:flex-row justify-between items-center gap-8">
             <div>
