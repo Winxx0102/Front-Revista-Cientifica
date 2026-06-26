@@ -6,6 +6,7 @@ import ProtectedRoute from '@/components/ProtectedRoute';
 import ChronicleCard from '@/components/ChroniclesCard';
 import { motion, AnimatePresence } from 'framer-motion';
 import { FaSearch, FaInfoCircle } from 'react-icons/fa';
+import Link from 'next/link';
 
 const carouselImages = ['/images/carrucel1xdd.jpeg', '/images/carrucel2xdd.jpeg'];
 
@@ -116,12 +117,12 @@ export default function DashboardPage() {
                 Conocimiento politécnico al alcance de todos. Artículos de investigación de maestría y repositorio de proyectos de grado de pregrado, con acceso abierto y revisión por pares.
               </p>
               <div className="flex flex-wrap gap-4 pt-4">
-                <a href="#articulos" className="bg-sky-700 hover:bg-sky-600 text-white font-medium px-6 py-3 rounded-xl transition-all shadow-lg shadow-sky-900/20">
+                <Link href="/view" className="bg-sky-700 hover:bg-sky-600 text-white font-medium px-6 py-3 rounded-xl transition-all shadow-lg shadow-sky-900/20">
                   Explorar artículos
-                </a>
-                <a href="#articulos" className="bg-[#142840] hover:bg-[#1a3352] text-slate-300 font-medium px-6 py-3 rounded-xl border border-white/10 transition-all">
+                </Link>
+                <Link href="view" className="bg-[#142840] hover:bg-[#1a3352] text-slate-300 font-medium px-6 py-3 rounded-xl border border-white/10 transition-all">
                   Repositorio de proyectos
-                </a>
+                </Link>
                 <a href="https://upta.edu.ve/" target="_blank" rel="noopener noreferrer" className="bg-transparent hover:bg-white/5 text-slate-400 hover:text-white font-medium px-6 py-3 rounded-xl transition-all">
                   Portal institucional
                 </a>
@@ -222,12 +223,13 @@ export default function DashboardPage() {
                 Fecha de recepción del próximo número: <span className="text-sky-300 font-bold">por anunciar por el comité editorial</span>.
               </p>
               <div className="flex flex-wrap gap-4 pt-4">
-                <a href="#articulos" className="bg-sky-700 hover:bg-sky-600 text-white font-medium text-xs px-5 py-3 rounded-lg transition-all">
+                <Link href="/normas" className="bg-sky-700 hover:bg-sky-600 text-white font-medium text-xs px-5 py-3 rounded-lg transition-all">
                   Ver normas para autores
-                </a>
-                <a href="#articulos" className="bg-[#0b1b2e] hover:bg-[#11243a] text-slate-300 font-medium text-xs px-5 py-3 rounded-lg border border-white/5 transition-all">
+                </Link>
+
+                <Link href="/chronicles/create" className="bg-[#0b1b2e] hover:bg-[#11243a] text-slate-300 font-medium text-xs px-5 py-3 rounded-lg border border-white/5 transition-all">
                   Enviar trabajo
-                </a>
+                </Link>
               </div>
             </div>
 
