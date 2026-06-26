@@ -41,6 +41,8 @@ export default function Navbar() {
         <div className="hidden md:flex items-center gap-8">
           <ul className="flex items-center gap-6 text-sm font-medium text-slate-300">
             <li><Link href="/dashboard" className="hover:text-white transition-colors">Inicio</Link></li>
+                        <li><Link href="/normas" className="hover:text-white transition-colors">Normas</Link></li>
+                        <li><Link href="/about" className="hover:text-white transition-colors">Acerca de</Link></li>
             <li><Link href="https://upta.edu.ve/" className="hover:text-white transition-colors">Portal UPTA</Link></li>
           </ul>
 
@@ -77,6 +79,9 @@ export default function Navbar() {
           >
             <div className="flex flex-col p-6 gap-4 text-slate-300">
               <Link href="/dashboard" onClick={() => setIsOpen(false)}>Inicio</Link>
+              <Link href="/normas" onClick={() => setIsOpen(false)}>Normas</Link>
+              <Link href="/about" onClick={() => setIsOpen(false)}>Acerca de</Link>
+              <Link href="https://upta.edu.ve/" onClick={() => setIsOpen(false)}>Portal UPTA</Link>
               <RoleGuard roles={['ADMIN', 'SUPERADMIN']}>
                 <Link href="/chronicles/create" onClick={() => setIsOpen(false)} className="text-sky-400 font-semibold">Subir Publicación</Link>
                 <Link href="/admin" onClick={() => setIsOpen(false)} className="text-sky-400 font-semibold">Admin Panel</Link>
