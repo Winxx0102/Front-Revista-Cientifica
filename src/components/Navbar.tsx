@@ -11,16 +11,14 @@ export default function Navbar() {
   const { logout, user, isLoading } = useAuth();
   const pathname = usePathname();
   const [isOpen, setIsOpen] = useState(false);
+  const isAdmin = !isLoading && !!user && (user.role === 'ADMIN' || user.role === 'SUPERADMIN');
 
-  // No mostrar navbar en login/register
   if (pathname === '/login' || pathname === '/register') return null;
 
-  const isAdminOrSuper = !isLoading && (user?.role === 'ADMIN' || user?.role === 'SUPERADMIN');
-
-  // Lógica manejada centralmente en el AuthContext
   const handleLogout = async () => {
     setIsOpen(false);
     await logout();
+    window.location.href = '/login';
   };
 
   return (
@@ -54,7 +52,7 @@ export default function Navbar() {
             <li><Link href="https://upta.edu.ve/" className="hover:text-white transition-colors">Portal UPTA</Link></li>
           </ul>
 
-          {isAdminOrSuper && (
+          {isAdmin && (
             <>
               <Link href="/chronicles/create" className="bg-sky-700 hover:bg-sky-800 text-white px-4 py-2 rounded text-sm transition-colors">
                 Subir Publicación
@@ -90,9 +88,9 @@ export default function Navbar() {
           >
             <div className="flex flex-col p-6 gap-4 text-slate-300">
               <Link href="/dashboard" onClick={() => setIsOpen(false)}>Inicio</Link>
-              <Link href="https://upta.edu.ve/" className="hover:text-white transition-colors">Portal UPTA</Link>
+              <Link href="https://upta.edu.ve/" onClick={() => setIsOpen(false)} className="hover:text-white transition-colors">Portal UPTA</Link>
               
-              {isAdminOrSuper && (
+              {isAdmin && (
                 <>
                   <Link href="/chronicles/create" onClick={() => setIsOpen(false)} className="text-sky-400 font-semibold">
                     Subir Publicación
