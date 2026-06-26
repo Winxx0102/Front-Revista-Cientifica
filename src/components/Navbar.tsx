@@ -43,7 +43,7 @@ export default function Navbar() {
             <li><Link href="/dashboard" className="hover:text-white transition-colors">Inicio</Link></li>
                         <li><Link href="/normas" className="hover:text-white transition-colors">Normas</Link></li>
                         <li><Link href="/about" className="hover:text-white transition-colors">Acerca de</Link></li>
-                         <li><Link href="/chonicles/create" className="hover:text-white transition-colors">envios</Link></li>
+                         <li><Link href="/chronicles/create" className="hover:text-white transition-colors">envios</Link></li>
             <li><Link href="https://upta.edu.ve/" className="hover:text-white transition-colors">Portal UPTA</Link></li>
           </ul>
 
