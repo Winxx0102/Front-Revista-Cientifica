@@ -41,6 +41,7 @@ export default function Navbar() {
         <div className="hidden md:flex items-center gap-8">
           <ul className="flex items-center gap-6 text-sm font-medium text-slate-300">
             <li><Link href="/dashboard" className="hover:text-white transition-colors">Inicio</Link></li>
+              <li><Link href="/view" className="hover:text-white transition-colors">Articulos-Repositorios</Link></li>
                         <li><Link href="/normas" className="hover:text-white transition-colors">Normas</Link></li>
                         <li><Link href="/about" className="hover:text-white transition-colors">Acerca de</Link></li>
                          <li><Link href="/chronicles/create" className="hover:text-white transition-colors">envios</Link></li>
@@ -80,6 +81,7 @@ export default function Navbar() {
           >
             <div className="flex flex-col p-6 gap-4 text-slate-300">
               <Link href="/dashboard" onClick={() => setIsOpen(false)}>Inicio</Link>
+               <Link href="/view" onClick={() => setIsOpen(false)}>Articulos-Repositorios</Link>
               <Link href="/normas" onClick={() => setIsOpen(false)}>Normas</Link>
               <Link href="/about" onClick={() => setIsOpen(false)}>Acerca de</Link>
                <Link href="/chronicles/create" onClick={() => setIsOpen(false)}>Envios</Link>
