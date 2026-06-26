@@ -9,7 +9,8 @@ export default function LoginPage() {
   const [form, setForm] = useState({ email: '', password: '' });
   const [loading, setLoading] = useState(false);
   
-  const { login, user, isLoading } = useAuth();
+  // Agregamos updateUser del AuthContext
+  const { updateUser, user, isLoading } = useAuth();
   const router = useRouter();
 
   useEffect(() => {
@@ -27,7 +28,12 @@ export default function LoginPage() {
         method: 'POST', 
         body: JSON.stringify(form) 
       });
-      login(data.user || data); 
+
+      // CORRECCIÓN: Usamos updateUser para forzar el re-render de toda la App
+      // Aseguramos que pasamos el objeto user que espera el contexto
+      const userData = data.user || data;
+      updateUser(userData); 
+      
       router.push('/dashboard');
     } catch (err: unknown) {
       console.error("Login fallido:", err);
@@ -46,10 +52,10 @@ export default function LoginPage() {
   }
 
   return (
-    <div className=" min-h-screen flex items-center justify-center p-6 ">
+    <div className="min-h-screen flex items-center justify-center p-6">
       <div className="max-w-5xl w-full flex flex-col md:flex-row items-center gap-16">
         
-        {/* Contenedor Institucional */}
+        {/* Contenedor Institucional (Sin cambios) */}
         <div className="flex-1 text-left space-y-6">
           <h1 className="text-6xl md:text-7xl font-serif italic text-white leading-tight tracking-tight">
             Saberes<br />Politécnicos
@@ -63,7 +69,7 @@ export default function LoginPage() {
           </div>
         </div>
 
-        {/* Formulario Editorial */}
+        {/* Formulario Editorial (Sin cambios) */}
         <form onSubmit={handleSubmit} className="p-10 bg-[#142840] rounded border border-white/10 w-full max-w-md shadow-2xl">
           <h2 className="text-2xl font-serif italic text-white mb-8">Iniciar Sesión</h2>
           

@@ -14,7 +14,8 @@ type AuthContextType = {
   login: (userData: User) => void;
   logout: () => Promise<void>;
   isLoading: boolean;
-  refreshUser: () => Promise<void>; // <-- Nueva utilidad
+  refreshUser: () => Promise<void>;
+  updateUser: (newUser: User | null) => void; // <--- AGREGADO
 };
 
 const AuthContext = createContext<AuthContextType | undefined>(undefined);
@@ -23,11 +24,9 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
   const [user, setUser] = useState<User | null>(null);
   const [isLoading, setIsLoading] = useState(true);
 
-  // Función para re-verificar la sesión (útil tras cambios)
   const refreshUser = useCallback(async () => {
     try {
       const data = await fetchApi('/auth/verify-session');
-      // Asegúrate de que aquí llega el objeto usuario correctamente
       setUser(data.user || data); 
     } catch (err) {
       setUser(null);
@@ -37,12 +36,17 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
   }, []);
 
   useEffect(() => {
-    // Call refreshUser asynchronously to avoid synchronous setState in effect
-    const run = async () => {
+    const initializeUser = async () => {
       await refreshUser();
     };
-    run();
+
+    void initializeUser();
   }, [refreshUser]);
+
+  // Esta función permite actualizar el estado manualmente (ej. tras un login exitoso)
+  const updateUser = (newUser: User | null) => {
+    setUser(newUser);
+  };
 
   const login = (userData: User) => {
     setUser(userData);
@@ -60,7 +64,7 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
   };
 
   return (
-    <AuthContext.Provider value={{ user, login, logout, isLoading, refreshUser }}>
+    <AuthContext.Provider value={{ user, login, logout, isLoading, refreshUser, updateUser }}>
       {children}
     </AuthContext.Provider>
   );
