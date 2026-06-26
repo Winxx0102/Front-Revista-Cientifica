@@ -7,6 +7,9 @@ import ChronicleCard from '@/components/ChroniclesCard';
 import { motion, AnimatePresence } from 'framer-motion';
 import { FaSearch, FaInfoCircle } from 'react-icons/fa';
 
+
+
+
 const carouselImages = ['/images/carrucel1xdd.jpeg', '/images/carrucel2xdd.jpeg'];
 
 type Chronicle = {
@@ -25,7 +28,21 @@ export default function DashboardPage() {
   const [currentPage, setCurrentPage] = useState(1);
   const [currentIndex, setCurrentIndex] = useState(0);
   const itemsPerPage = 6;
-
+  
+useEffect(() => {
+    const hasRefreshed = sessionStorage.getItem('dashboardRefreshed');
+    
+    if (!hasRefreshed) {
+      sessionStorage.setItem('dashboardRefreshed', 'true');
+      window.location.reload();
+    }
+    
+    // Limpiamos el flag cuando el usuario sale del componente 
+    // para que la próxima vez que entre, se vuelva a refrescar una vez.
+    return () => {
+      sessionStorage.removeItem('dashboardRefreshed');
+    };
+  }, []);
   useEffect(() => {
     const timer = setInterval(() => {
       setCurrentIndex((prev) => (prev === carouselImages.length - 1 ? 0 : prev + 1));
