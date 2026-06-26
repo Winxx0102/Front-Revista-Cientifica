@@ -6,7 +6,7 @@ import { FaFileDownload } from "react-icons/fa";
 export default function NormasPage() {
   return (
     <ProtectedRoute>
-      <div className="min-h-screen bg-[#0b1b2e] py-16 px-6">
+      <div className="min-h-screen  py-16 px-6">
         <article className="max-w-4xl mx-auto space-y-12 text-slate-300">
           
           {/* Cabecera */}

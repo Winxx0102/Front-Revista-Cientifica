@@ -5,7 +5,7 @@ import ProtectedRoute from "@/components/ProtectedRoute";
 export default function AboutPage() {
   return (
     <ProtectedRoute>
-      <div className="min-h-screen bg-[#0b1b2e] py-16 px-6">
+      <div className="min-h-screen  py-16 px-6">
         <article className="max-w-4xl mx-auto space-y-12">
           
           {/* Cabecera */}

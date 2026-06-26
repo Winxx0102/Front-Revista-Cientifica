@@ -71,7 +71,7 @@ export default function DashboardPage() {
 
   return (
     <ProtectedRoute>
-      <div className="min-h-screen text-slate-200 bg-[#0b1b2e]">
+      <div className="min-h-screen text-slate-200 ">
         
     
 

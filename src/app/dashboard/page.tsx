@@ -83,7 +83,7 @@ export default function DashboardPage() {
 
   return (
     <ProtectedRoute>
-      <div className="min-h-screen text-slate-200 bg-[#0b1b2e]">
+      <div className="min-h-screen text-slate-200 ">
         
         {/* 1. FRANJA INSTITUCIONAL */}
         <div className="bg-[#0e243d] border-b border-white/5 py-4 w-full">
@@ -150,6 +150,7 @@ export default function DashboardPage() {
               </div>
             </div>
           </div>
+          {/* Saberes */}
 
           {/* Decoración geométrica SVG Original */}
           <div className="absolute right-0 bottom-0 top-0 w-1/3 opacity-30 pointer-events-none hidden lg:block" aria-hidden="true">
