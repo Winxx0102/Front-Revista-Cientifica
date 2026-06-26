@@ -4,13 +4,14 @@ import { useParams, useRouter } from 'next/navigation';
 import { fetchApi } from '@/services/api';
 import { useAuth } from '@/context/AuthContext';
 import { motion } from 'framer-motion';
-import { FaArrowLeft, FaFilePdf, FaDownload } from 'react-icons/fa';
+import { FaArrowLeft, FaFilePdf, FaDownload, FaEnvelope, FaCalendar, FaTag, FaBook } from 'react-icons/fa';
 
 export default function ChronicleDetailPage() {
   const params = useParams();
   const router = useRouter();
   const { user, isLoading: authLoading } = useAuth();
   
+  // Interfaz actualizada con los nuevos campos
   interface Chronicle {
     id?: string; 
     _id?: string; 
@@ -18,6 +19,10 @@ export default function ChronicleDetailPage() {
     author?: string; 
     content?: string; 
     file_path?: string;
+    correo?: string;
+    materia?: string;
+    palabras_claves?: string;
+    year_presentacion?: string;
   }
 
   const [chronicle, setChronicle] = useState<Chronicle | null>(null);
@@ -43,11 +48,11 @@ export default function ChronicleDetailPage() {
   };
 
   if (loading || authLoading) {
-    return <div className="min-h-screen  flex items-center justify-center text-slate-500">Cargando crónica...</div>;
+    return <div className="min-h-screen flex items-center justify-center text-slate-500">Cargando crónica...</div>;
   }
 
   if (!chronicle) {
-    return <div className="min-h-screen  text-white flex items-center justify-center">Crónica no encontrada.</div>;
+    return <div className="min-h-screen text-white flex items-center justify-center">Crónica no encontrada.</div>;
   }
 
   const fileUrl = getFileUrl(chronicle.file_path);
@@ -55,7 +60,7 @@ export default function ChronicleDetailPage() {
   const canEdit = !authLoading && (user?.role === 'ADMIN' || user?.role === 'SUPERADMIN');
 
   return (
-    <div className="min-h-screen  py-16 px-6">
+    <div className="min-h-screen py-16 px-6">
       <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} className="max-w-3xl mx-auto">
         <button 
           onClick={() => router.back()} 
@@ -66,33 +71,48 @@ export default function ChronicleDetailPage() {
 
         <article className="bg-[#0e243d] border border-white/5 p-10 rounded shadow-2xl">
           <h1 className="text-4xl font-serif text-white mb-3">{chronicle.title}</h1>
-          <p className="text-sm text-sky-400 font-medium mb-10 border-b border-white/5 pb-6">
-            Por: {chronicle.author}
-          </p>
+          <p className="text-sm text-sky-400 font-medium mb-6">Por: {chronicle.author}</p>
+          
+          {/* Ficha técnica rápida */}
+          <div className="grid grid-cols-2 md:grid-cols-4 gap-4 mb-10 p-4 bg-[#0b1b2e] rounded border border-white/5">
+             <div className="text-[10px] text-slate-400">
+                <span className="block font-bold uppercase mb-1">Materia</span>
+                <span className="text-white flex items-center gap-1"><FaBook size={10}/> {chronicle.materia}</span>
+             </div>
+             <div className="text-[10px] text-slate-400">
+                <span className="block font-bold uppercase mb-1">Año</span>
+                <span className="text-white flex items-center gap-1"><FaCalendar size={10}/> {chronicle.year_presentacion}</span>
+             </div>
+             <div className="text-[10px] text-slate-400 col-span-2">
+                <span className="block font-bold uppercase mb-1">Contacto</span>
+                <span className="text-white flex items-center gap-1"><FaEnvelope size={10}/> {chronicle.correo}</span>
+             </div>
+          </div>
 
-          <div className="text-slate-300 leading-relaxed text-lg font-light text-justify mb-12">
+          <div className="text-slate-300 leading-relaxed text-lg font-light text-justify mb-10">
             {chronicle.content}
           </div>
+
+          {/* Palabras clave */}
+          {chronicle.palabras_claves && (
+            <div className="mb-8 flex flex-wrap gap-2">
+              {chronicle.palabras_claves.split(',').map((tag, i) => (
+                <span key={i} className="text-[10px] font-bold uppercase tracking-widest text-sky-400 bg-sky-900/20 px-3 py-1 rounded">
+                  {tag.trim()}
+                </span>
+              ))}
+            </div>
+          )}
 
           {fileUrl && (
             <div className="border-t border-white/5 pt-8">
               <h3 className="text-white text-[10px] font-bold uppercase tracking-[0.2em] mb-6 flex items-center gap-2">
                 <FaFilePdf className="text-red-400" /> Documento adjunto
               </h3>
-              
               {isPdf ? (
-                <iframe 
-                  src={fileUrl} 
-                  className="w-full h-[600px] rounded border border-white/10 bg-white"
-                  title="Vista previa del documento"
-                />
+                <iframe src={fileUrl} className="w-full h-[600px] rounded border border-white/10 bg-white" title="Documento" />
               ) : (
-                <a 
-                  href={fileUrl} 
-                  target="_blank" 
-                  rel="noopener noreferrer" 
-                  className="flex items-center justify-center gap-3 p-4 bg-sky-900/20 text-sky-400 uppercase font-bold text-xs hover:bg-sky-900/40 transition-all rounded"
-                >
+                <a href={fileUrl} target="_blank" rel="noopener noreferrer" className="flex items-center justify-center gap-3 p-4 bg-sky-900/20 text-sky-400 uppercase font-bold text-xs hover:bg-sky-900/40 transition-all rounded">
                   <FaDownload /> Descargar archivo
                 </a>
               )}
@@ -113,4 +133,4 @@ export default function ChronicleDetailPage() {
       </motion.div>
     </div>
   );
-} //hola
+}

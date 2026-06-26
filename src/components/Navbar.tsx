@@ -43,15 +43,16 @@ export default function Navbar() {
             <li><Link href="/dashboard" className="hover:text-white transition-colors">Inicio</Link></li>
                         <li><Link href="/normas" className="hover:text-white transition-colors">Normas</Link></li>
                         <li><Link href="/about" className="hover:text-white transition-colors">Acerca de</Link></li>
+                         <li><Link href="/chonicles/create" className="hover:text-white transition-colors">envios</Link></li>
             <li><Link href="https://upta.edu.ve/" className="hover:text-white transition-colors">Portal UPTA</Link></li>
           </ul>
 
           {/* Si está cargando, ocultamos para evitar parpadeos */}
           {!isLoading && (
             <RoleGuard roles={['ADMIN', 'SUPERADMIN']}>
-              <Link href="/chronicles/create" className="bg-sky-700 hover:bg-sky-800 text-white px-4 py-2 rounded text-sm transition-colors">
+              {/* <Link href="/chronicles/create" className="bg-sky-700 hover:bg-sky-800 text-white px-4 py-2 rounded text-sm transition-colors">
                 Subir Publicación
-              </Link>
+              </Link> */}
               <Link href="/admin" className="bg-sky-700 hover:bg-sky-800 text-white px-4 py-2 rounded text-sm transition-colors">
                 Admin Panel
               </Link>
@@ -81,9 +82,10 @@ export default function Navbar() {
               <Link href="/dashboard" onClick={() => setIsOpen(false)}>Inicio</Link>
               <Link href="/normas" onClick={() => setIsOpen(false)}>Normas</Link>
               <Link href="/about" onClick={() => setIsOpen(false)}>Acerca de</Link>
+               <Link href="/chronicles/create" onClick={() => setIsOpen(false)}>Envios</Link>
               <Link href="https://upta.edu.ve/" onClick={() => setIsOpen(false)}>Portal UPTA</Link>
               <RoleGuard roles={['ADMIN', 'SUPERADMIN']}>
-                <Link href="/chronicles/create" onClick={() => setIsOpen(false)} className="text-sky-400 font-semibold">Subir Publicación</Link>
+                {/* <Link href="/chronicles/create" onClick={() => setIsOpen(false)} className="text-sky-400 font-semibold">Subir Publicación</Link> */}
                 <Link href="/admin" onClick={() => setIsOpen(false)} className="text-sky-400 font-semibold">Admin Panel</Link>
               </RoleGuard>
               <button onClick={handleLogout} className="text-left text-red-400">Salir</button>
