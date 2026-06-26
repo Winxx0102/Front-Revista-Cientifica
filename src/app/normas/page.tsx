@@ -87,23 +87,7 @@ export default function NormasPage() {
           </section>
 
           {/* Plantillas */}
-          <section>
-            <h2 className="text-2xl font-bold text-white mb-6">Plantillas descargables</h2>
-            <div className="grid md:grid-cols-2 gap-4">
-              {[
-                { name: "Plantilla artículo científico", file: "plantilla-articulo.md" },
-                { name: "Plantilla proyecto de grado", file: "plantilla-proyecto.md" }
-              ].map((t, i) => (
-                <a key={i} href="#" className="flex items-center gap-4 p-6 bg-[#0e243d] rounded-2xl border border-white/10 hover:border-sky-500 transition-all">
-                  <FaFileDownload className="text-2xl text-sky-400" />
-                  <div>
-                    <strong className="block text-white">{t.name}</strong>
-                    <span className="text-xs text-slate-500">{t.file}</span>
-                  </div>
-                </a>
-              ))}
-            </div>
-          </section>
+         
 
         </article>
       </div>
