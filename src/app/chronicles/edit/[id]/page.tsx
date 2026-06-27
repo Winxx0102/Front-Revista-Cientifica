@@ -1,5 +1,5 @@
 'use client';
-import { useEffect, useState, useRef } from 'react';
+import { useEffect, useState } from 'react';
 import { useParams, useRouter } from 'next/navigation';
 import { fetchApi } from '@/services/api';
 import { useAuth } from '@/context/AuthContext';
@@ -25,8 +25,8 @@ export default function EditChroniclePage() {
       fetchApi(`/revista/${id}`)
         .then((data) => {
           setFormData({ 
-            title: data.title, 
-            content: data.content,
+            title: data.title || '', 
+            content: data.content || '',
             author: data.author || '',
             correo: data.correo || '',
             materia: data.materia || '',
@@ -46,17 +46,24 @@ export default function EditChroniclePage() {
     e.preventDefault();
     const loadingToast = toast.loading("Actualizando...");
 
+    const dataToSend = new FormData();
+    Object.entries(formData).forEach(([key, value]) => {
+      dataToSend.append(key, value);
+    });
+
+    if (selectedFile) {
+      dataToSend.append('file', selectedFile);
+    }
+
     try {
-      // Usamos JSON directamente si tu API backend soporta el envío de campos junto al archivo
-      // o ajustamos según tu implementación de fetchApi
       await fetchApi(`/revista/${id}`, {
         method: 'PATCH',
-        body: JSON.stringify(formData), 
+        body: dataToSend, 
       });
 
       toast.dismiss(loadingToast);
       toast.success('Crónica actualizada con éxito.');
-      router.push(`/revista/${id}`);
+      router.push(`/chronicles/${id}`);
     } catch (err: unknown) {
       toast.dismiss(loadingToast);
       toast.error('Error al actualizar.');
@@ -118,6 +125,17 @@ export default function EditChroniclePage() {
               <div className="space-y-2">
                 <label className="text-[10px] font-bold text-slate-400 uppercase tracking-[0.2em]">Contenido</label>
                 <textarea value={formData.content} onChange={(e) => setFormData({...formData, content: e.target.value})} rows={5} className="w-full p-4 bg-[#0b1b2e] border border-white/10 text-white rounded outline-none focus:border-sky-500" />
+              </div>
+
+              <div className="space-y-2">
+                <label className="text-[10px] font-bold text-slate-400 uppercase tracking-[0.2em]">Reemplazar archivo (PDF)</label>
+                <input 
+                  type="file" 
+                  accept="application/pdf"
+                  onChange={(e) => setSelectedFile(e.target.files ? e.target.files[0] : null)}
+                  className="w-full p-4 bg-[#0b1b2e] text-slate-400 border border-white/10 rounded cursor-pointer file:mr-4 file:py-2 file:px-4 file:rounded file:border-0 file:bg-sky-900 file:text-white hover:file:bg-sky-800 transition-all" 
+                />
+                <p className="text-[9px] text-slate-500 italic">Dejar vacío si no deseas cambiar el archivo actual.</p>
               </div>
 
               <button type="submit" className="w-full py-4 bg-sky-700 hover:bg-sky-600 text-white font-bold uppercase text-xs rounded transition-all">
