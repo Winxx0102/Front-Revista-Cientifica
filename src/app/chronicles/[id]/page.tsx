@@ -60,7 +60,6 @@ export default function ChronicleDetailPage() {
   return (
     <div className="min-h-screen py-16 px-6">
       <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} className="max-w-3xl mx-auto">
-        {/* Botón Volver */}
         <button 
           onClick={() => router.back()} 
           className="flex items-center gap-2 text-slate-500 hover:text-sky-400 mb-8 text-[10px] font-bold uppercase tracking-[0.2em] transition-colors"
@@ -72,7 +71,6 @@ export default function ChronicleDetailPage() {
           <h1 className="text-4xl font-serif text-white mb-3">{chronicle.title}</h1>
           <p className="text-sm text-sky-400 font-medium mb-6">Por: {chronicle.author}</p>
           
-          {/* Ficha técnica */}
           <div className="grid grid-cols-2 md:grid-cols-4 gap-4 mb-10 p-4 bg-[#0b1b2e] rounded border border-white/5">
              <div className="text-[10px] text-slate-400">
                 <span className="block font-bold uppercase mb-1">Materia</span>
@@ -92,7 +90,6 @@ export default function ChronicleDetailPage() {
             {chronicle.content}
           </div>
 
-          {/* Palabras clave */}
           {chronicle.palabras_claves && (
             <div className="mb-8 flex flex-wrap gap-2">
               {chronicle.palabras_claves.split(',').map((tag, i) => (
@@ -103,7 +100,6 @@ export default function ChronicleDetailPage() {
             </div>
           )}
 
-          {/* Acciones de Archivo */}
           {fileUrl && (
             <div className="border-t border-white/5 pt-8">
               <h3 className="text-white text-[10px] font-bold uppercase tracking-[0.2em] mb-6 flex items-center gap-2">
@@ -111,6 +107,7 @@ export default function ChronicleDetailPage() {
               </h3>
               
               <div className="flex flex-col md:flex-row gap-4">
+                {/* Leer documento */}
                 <a 
                   href={fileUrl} 
                   target="_blank" 
@@ -120,6 +117,7 @@ export default function ChronicleDetailPage() {
                   <FaFilePdf /> Leer documento
                 </a>
 
+                {/* Descargar PDF */}
                 <a 
                   href={fileUrl} 
                   download
@@ -131,12 +129,11 @@ export default function ChronicleDetailPage() {
             </div>
           )}
 
-          {/* Botón Editar para Admin */}
           {canEdit && (
             <div className="mt-12 pt-8 border-t border-white/5">
               <button 
                 onClick={() => router.push(`/chronicles/edit/${chronicle.id || chronicle._id}`)} 
-                className="w-full py-4 bg-transparent border border-sky-900/50 text-sky-400 hover:bg-sky-900/20 font-bold transition-all text-[10px] uppercase tracking-widest rounded"
+                className="px-8 py-3 bg-sky-700 hover:bg-sky-600 text-white font-bold transition-all text-[10px] uppercase tracking-widest rounded"
               >
                 Editar Artículo
               </button>
