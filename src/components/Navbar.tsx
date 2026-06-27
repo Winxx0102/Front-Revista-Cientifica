@@ -44,7 +44,7 @@ export default function Navbar() {
               <li><Link href="/view" className="hover:text-white transition-colors">Articulos-Repositorios</Link></li>
                         <li><Link href="/normas" className="hover:text-white transition-colors">Normas</Link></li>
                         <li><Link href="/about" className="hover:text-white transition-colors">Acerca de</Link></li>
-                         <li><Link href="/chronicles/create" className="hover:text-white transition-colors">envios</Link></li>
+                         <li><Link href="/chronicles/create" className="hover:text-white transition-colors">Envíos</Link></li>
             <li><Link href="https://upta.edu.ve/" className="hover:text-white transition-colors">Portal UPTA</Link></li>
           </ul>
 
@@ -84,7 +84,7 @@ export default function Navbar() {
                <Link href="/view" onClick={() => setIsOpen(false)}>Articulos-Repositorios</Link>
               <Link href="/normas" onClick={() => setIsOpen(false)}>Normas</Link>
               <Link href="/about" onClick={() => setIsOpen(false)}>Acerca de</Link>
-               <Link href="/chronicles/create" onClick={() => setIsOpen(false)}>Envios</Link>
+               <Link href="/chronicles/create" onClick={() => setIsOpen(false)}>Envíos</Link>
               <Link href="https://upta.edu.ve/" onClick={() => setIsOpen(false)}>Portal UPTA</Link>
               <RoleGuard roles={['ADMIN', 'SUPERADMIN']}>
                 {/* <Link href="/chronicles/create" onClick={() => setIsOpen(false)} className="text-sky-400 font-semibold">Subir Publicación</Link> */}
