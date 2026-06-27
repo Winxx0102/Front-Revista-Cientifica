@@ -7,6 +7,11 @@ export default function Footer() {
   const navLinks = [
     { name: 'Inicio', url: '/dashboard' },
     { name: 'Portal UPTA', url: 'https://upta.edu.ve' },
+   { name: 'Artículos y repositorios', url: '/view' },        // Lista completa de publicaciones
+    { name: 'Envios', url: '/chronicles/create' },
+     { name: 'Acerca de', url: '/about' },
+      { name: 'Normas', url: '/normas' },
+    
   ];
 
   return (
