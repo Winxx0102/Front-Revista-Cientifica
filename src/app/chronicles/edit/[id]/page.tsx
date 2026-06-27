@@ -2,6 +2,7 @@
 import { useEffect, useState } from 'react';
 import { useParams, useRouter } from 'next/navigation';
 import { fetchApi } from '@/services/api';
+import { supabase } from '@/lib/supabaseClient';
 import { useAuth } from '@/context/AuthContext';
 import { toast } from 'sonner';
 import { motion } from 'framer-motion';
@@ -15,7 +16,7 @@ export default function EditChroniclePage() {
   const { user } = useAuth();
   
   const [formData, setFormData] = useState({ 
-    title: '', content: '', author: '', correo: '', materia: '', palabras_claves: '', year_presentacion: '' 
+    title: '', content: '', author: '', correo: '', materia: '', palabras_claves: '', year_presentacion: '', file_path: '' 
   });
   const [selectedFile, setSelectedFile] = useState<File | null>(null);
   const [loading, setLoading] = useState(true);
@@ -31,7 +32,8 @@ export default function EditChroniclePage() {
             correo: data.correo || '',
             materia: data.materia || '',
             palabras_claves: data.palabras_claves || '',
-            year_presentacion: data.year_presentacion || ''
+            year_presentacion: data.year_presentacion || '',
+            file_path: data.file_path || ''
           });
           setLoading(false);
         })
@@ -46,19 +48,29 @@ export default function EditChroniclePage() {
     e.preventDefault();
     const loadingToast = toast.loading("Actualizando...");
 
-    const dataToSend = new FormData();
-    Object.entries(formData).forEach(([key, value]) => {
-      dataToSend.append(key, value);
-    });
-
-    if (selectedFile) {
-      dataToSend.append('file', selectedFile);
-    }
-
     try {
+      let finalFilePath = formData.file_path;
+
+      // Lógica de archivo: Si hay un archivo seleccionado, subir a Supabase
+      if (selectedFile) {
+        const fileExt = selectedFile.name.split('.').pop();
+        const fileName = `${Date.now()}-${Math.random().toString(36).substring(7)}.${fileExt}`;
+        const filePath = `uploads/${fileName}`;
+
+        const { error: uploadError } = await supabase.storage
+          .from('Documentos')
+          .upload(filePath, selectedFile, { cacheControl: '3600', upsert: true });
+
+        if (uploadError) throw new Error(uploadError.message);
+        finalFilePath = filePath;
+      } else {
+        toast.info("No se seleccionó un nuevo archivo, se mantendrá el actual.");
+      }
+
+      // Enviar datos actualizados al backend
       await fetchApi(`/revista/${id}`, {
         method: 'PATCH',
-        body: dataToSend, 
+        body: JSON.stringify({ ...formData, file_path: finalFilePath }),
       });
 
       toast.dismiss(loadingToast);
@@ -66,7 +78,7 @@ export default function EditChroniclePage() {
       router.push(`/chronicles/${id}`);
     } catch (err: unknown) {
       toast.dismiss(loadingToast);
-      toast.error('Error al actualizar.');
+      toast.error(err instanceof Error ? err.message : 'Error al actualizar.');
     }
   };
 
@@ -131,11 +143,11 @@ export default function EditChroniclePage() {
                 <label className="text-[10px] font-bold text-slate-400 uppercase tracking-[0.2em]">Reemplazar archivo (PDF)</label>
                 <input 
                   type="file" 
-                  accept="application/pdf"
+                  accept=".pdf,.doc,.docx,.ppt,.pptx"
                   onChange={(e) => setSelectedFile(e.target.files ? e.target.files[0] : null)}
                   className="w-full p-4 bg-[#0b1b2e] text-slate-400 border border-white/10 rounded cursor-pointer file:mr-4 file:py-2 file:px-4 file:rounded file:border-0 file:bg-sky-900 file:text-white hover:file:bg-sky-800 transition-all" 
                 />
-                <p className="text-[9px] text-slate-500 italic">Dejar vacío si no deseas cambiar el archivo actual.</p>
+                <p className="text-[9px] text-slate-500 italic">Opcional: Si no selecciona archivo, se mantendrá el actual.</p>
               </div>
 
               <button type="submit" className="w-full py-4 bg-sky-700 hover:bg-sky-600 text-white font-bold uppercase text-xs rounded transition-all">
