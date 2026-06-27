@@ -48,7 +48,7 @@ export default function DashboardPage() {
     };
     if (user) loadData();
   }, [user]);
-
+//favicon
   // Filtrado de crónicas
   const filteredChronicles = useMemo(() => {
     return chronicles.filter(c => {
@@ -78,7 +78,7 @@ export default function DashboardPage() {
         {/* 5. EXPLORADOR E INTEGRACIÓN DE ARTÍCULOS ACTIVOS */}
         <div id="articulos" className="max-w-7xl mx-auto px-6 py-16">
            <h2 className="text-5xl md:text-7xl font-serif italic text-white leading-tight tracking-tight">
-                Articulos Cientificos y<br />Repositorios <br />
+                Articulos Cientificos y<br />Repositorios <br /><br /><br />
               </h2>
           {/* Banner de estadísticas dinámico */}
           <div className="bg-gradient-to-r from-[#0e243d] to-[#0b1b2e] border border-white/5 p-10 rounded-2xl mb-12 flex flex-col md:flex-row justify-between items-center gap-8">
