@@ -43,14 +43,12 @@ export default function Footer() {
           <p className="font-mono">© {new Date().getFullYear()} UPTA — DERECHOS RESERVADOS</p>
           
           <div className="flex items-center gap-4">
-            <span>GESTIÓN TÉCNICA: JORGE TOVAR</span>
+            <span>GESTIÓN TÉCNICA:</span>
             <div className="flex items-center gap-3">
               <a href="https://github.com/Winxx0102" target="_blank" className="hover:text-white transition-colors">
                 <FaGithub size={12} />
               </a>
-              <a href="mailto:olowixtovar@gmail.com" className="hover:text-white transition-colors">
-                <FaEnvelope size={12} />
-              </a>
+             
             </div>
           </div>
         </div>
