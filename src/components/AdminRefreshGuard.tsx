@@ -18,7 +18,7 @@ export default function AdminRefreshGuard() {
         // alcancen a leerse del almacenamiento antes de disparar el F5 cibernético
         setTimeout(() => {
           window.location.reload();
-        }, 100);
+        }, 1);
       }
     }
   }, [pathname]);
