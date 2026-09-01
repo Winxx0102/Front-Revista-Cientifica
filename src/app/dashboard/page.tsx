@@ -5,7 +5,7 @@ import { useAuth } from '@/context/AuthContext';
 import ProtectedRoute from '@/components/ProtectedRoute';
 import ChronicleCard from '@/components/ChroniclesCard';
 import { motion, AnimatePresence } from 'framer-motion';
-import { FaSearch, FaInfoCircle, FaChevronLeft, FaChevronRight, FaBookOpen, FaUniversity, FaLayerGroup, FaSparkles } from 'react-icons/fa';
+import { FaSearch, FaInfoCircle, FaChevronLeft, FaChevronRight, FaBookOpen, FaUniversity, FaLayerGroup, FaStar } from 'react-icons/fa';
 import Link from 'next/link';
 
 const carouselImages = ['/images/carrucel1xdd.jpeg', '/images/carrucel2xdd.jpeg'];
@@ -112,12 +112,12 @@ export default function DashboardPage() {
               </div>
             </div>
             <div className="hidden md:flex items-center gap-2 px-3 py-1 bg-white/[0.03] border border-white/[0.06] rounded-full text-[11px] font-mono text-slate-400">
-              <FaSparkles className="text-sky-400 text-xs" /> Portal Académico Activo
+              <FaStar className="text-sky-400 text-xs" /> Portal Académico Activo
             </div>
           </div>
         </div>
 
-        {/* 2. HERO SECCIÓN COMBINADA CON CARRUSEL OPTIMIZADO (MÁS GRANDE Y ELEGANTE) */}
+        {/* 2. HERO SECCIÓN COMBINADA CON CARRUSEL OPTIMIZADO */}
         <div className="relative border-b border-white/[0.06] bg-gradient-to-b from-[#0b1d33]/70 via-[#071321] to-[#050e19] py-16 md:py-24">
           <div className="max-w-7xl mx-auto px-6 grid grid-cols-1 lg:grid-cols-12 gap-12 lg:gap-16 items-center relative z-10">
             
@@ -151,7 +151,7 @@ export default function DashboardPage() {
               </div>
             </div>
 
-            {/* Carrusel Extra Grande, Más Ancho y Ultra Estético (lg:col-span-6 con altura ampliada) */}
+            {/* Carrusel Extra Grande */}
             <div className="lg:col-span-6 relative w-full h-[420px] md:h-[510px] rounded-3xl overflow-hidden border border-white/20 shadow-[0_25px_60px_-15px_rgba(0,0,0,0.7)] group ring-1 ring-white/10">
               <div className="absolute inset-0 bg-sky-950/20 z-0"></div>
               <AnimatePresence mode="wait">
@@ -167,7 +167,6 @@ export default function DashboardPage() {
                 />
               </AnimatePresence>
               
-              {/* Gradiente sofisticado y tipografía decorativa superpuesta */}
               <div className="absolute inset-0 bg-gradient-to-t from-[#050e19] via-[#050e19]/30 to-black/30 flex items-end justify-between p-8 pointer-events-none z-10">
                 <div className="space-y-1.5">
                   <span className="text-[10px] font-mono tracking-widest uppercase text-sky-300 bg-sky-500/25 px-3 py-1 rounded-full backdrop-blur-md border border-sky-400/30 shadow-lg inline-block">Galería Institucional</span>
@@ -185,7 +184,6 @@ export default function DashboardPage() {
                 </div>
               </div>
 
-              {/* Botones de navegación interactivos mejorados */}
               <button 
                 onClick={prevSlide}
                 className="absolute left-5 top-1/2 -translate-y-1/2 w-12 h-12 rounded-2xl bg-black/50 backdrop-blur-md border border-white/15 text-white flex items-center justify-center opacity-0 group-hover:opacity-100 transition-all duration-300 hover:bg-sky-600 hover:scale-105 shadow-xl z-20"
@@ -205,7 +203,7 @@ export default function DashboardPage() {
           </div>
         </div>
 
-        {/* 3. CARACTERÍSTICAS RÁPIDAS (Quick Features Grid con diseño pulido) */}
+        {/* 3. CARACTERÍSTICAS RÁPIDAS */}
         <div className="max-w-7xl mx-auto px-6 py-16 border-b border-white/[0.06]">
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
             
@@ -321,7 +319,6 @@ export default function DashboardPage() {
 
           <div className="flex flex-col lg:flex-row gap-12">
             
-            {/* Sidebar informativo */}
             <aside className="lg:w-80 space-y-8">
               <div className="bg-[#0b1d33]/80 backdrop-blur-md p-6 md:p-7 rounded-3xl border border-white/[0.08] shadow-xl space-y-4">
                 <h3 className="text-white font-bold mb-1 flex items-center gap-2.5 text-sm tracking-wide">
@@ -336,7 +333,6 @@ export default function DashboardPage() {
               </div>
             </aside>
 
-            {/* Buscador, Filtros y Render de Grilla Interactiva */}
             <div className="flex-1 space-y-6">
               <div className="flex flex-col md:flex-row gap-4">
                 <div className="relative flex-1">
@@ -358,14 +354,12 @@ export default function DashboardPage() {
                 </select>
               </div>
               
-              {/* Contenedor dinámico mapeado */}
               <motion.div className="grid grid-cols-1 md:grid-cols-2 gap-6 pt-2">
                 {paginatedData.map((c, index) => (
                   <ChronicleCard key={c?.id || c?._id || index} chronicle={c} />
                 ))}
               </motion.div>
 
-              {/* Botones de paginación reactiva */}
               {totalPages > 1 && (
                 <div className="flex justify-center gap-2.5 pt-8">
                   {[...Array(totalPages)].map((_, i) => (
