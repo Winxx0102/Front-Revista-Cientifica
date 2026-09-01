@@ -7,6 +7,7 @@ import { useAuth } from '@/context/AuthContext'; // Importamos el contexto
 import { usePathname } from 'next/navigation';
 import { motion, AnimatePresence } from 'framer-motion';
 import { RoleGuard } from '@/components/RoleGuard';
+import NotificationBell from '@/components/NotificacionBell'; // <--- Campana añadida
 
 export default function Navbar() {
   const { logout, user, isLoading } = useAuth(); // EXTRAEMOS TODO
@@ -60,15 +61,21 @@ export default function Navbar() {
             </RoleGuard>
           )}
 
+          {/* Campanita en escritorio */}
+          {!isLoading && user && <NotificationBell />}
+
           <button onClick={handleLogout} className="text-slate-400 hover:text-white text-sm transition-colors">
             Salir
           </button>
         </div>
 
         {/* Móvil */}
-        <button className="md:hidden text-white text-2xl" onClick={() => setIsOpen(!isOpen)}>
-          {isOpen ? '✕' : '☰'}
-        </button>
+        <div className="flex items-center gap-4 md:hidden">
+          {!isLoading && user && <NotificationBell />}
+          <button className="text-white text-2xl" onClick={() => setIsOpen(!isOpen)}>
+            {isOpen ? '✕' : '☰'}
+          </button>
+        </div>
       </div>
       
       <AnimatePresence>
