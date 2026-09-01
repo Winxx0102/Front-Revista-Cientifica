@@ -1,5 +1,4 @@
 'use client';
-
 import { useEffect } from 'react';
 import { usePathname } from 'next/navigation';
 
@@ -7,13 +6,20 @@ export default function AdminRefreshGuard() {
   const pathname = usePathname();
 
   useEffect(() => {
-    // Solo aplicamos el truco si entra al dashboard por primera vez en la sesión
-    const hasRefreshed = sessionStorage.getItem('adminUIRefreshed');
+    // Si estamos en el dashboard o en admin, revisamos si ya forzamos el refresh en esta sesión
+    if (pathname === '/dashboard' || pathname === '/admin') {
+      const hasForcedReload = sessionStorage.getItem('rudimentaryAdminFix');
 
-    // Verificamos si es admin o si el usuario viene de iniciar sesión
-    if (!hasRefreshed && (pathname === '/dashboard' || pathname === '/admin')) {
-      sessionStorage.setItem('adminUIRefreshed', 'true');
-      window.location.reload();
+      if (!hasForcedReload) {
+        // Marcamos inmediatamente para evitar bucles infinitos
+        sessionStorage.setItem('rudimentaryAdminFix', 'true');
+        
+        // Retardo estratégico de 100ms para asegurar que la sesión o el token 
+        // alcancen a leerse del almacenamiento antes de disparar el F5 cibernético
+        setTimeout(() => {
+          window.location.reload();
+        }, 100);
+      }
     }
   }, [pathname]);
 
