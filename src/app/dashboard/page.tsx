@@ -25,18 +25,15 @@ export default function DashboardPage() {
   const [filterBy, setFilterBy] = useState<'title' | 'author' | 'all'>('all');
   const [currentPage, setCurrentPage] = useState(1);
   const [currentIndex, setCurrentIndex] = useState(0);
+  const [isMounted] = useState(true);
   const itemsPerPage = 6;
 
   // Refresco controlado al entrar al Dashboard (INTACTO)
   useEffect(() => {
-    // Verificamos si ya se recargó en esta pestaña/sesión
     const hasRefreshed = sessionStorage.getItem('dashboardRefreshed');
 
     if (!hasRefreshed) {
-      // Marcamos que ya se recargó para que no entre en bucle
       sessionStorage.setItem('dashboardRefreshed', 'true');
-      
-      // Forzamos la recarga inmediata al entrar
       window.location.reload();
     }
   }, []);
@@ -84,6 +81,11 @@ export default function DashboardPage() {
   }, [filteredChronicles, currentPage]);
 
   const totalPages = Math.ceil(filteredChronicles.length / itemsPerPage);
+
+  // Evitamos renderizado fantasma hasta que el cliente esté completamente montado
+  if (!isMounted) {
+    return null;
+  }
 
   return (
     <ProtectedRoute>
