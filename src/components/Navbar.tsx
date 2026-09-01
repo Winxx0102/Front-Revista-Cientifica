@@ -3,14 +3,14 @@
 import { useState } from 'react';
 import Link from 'next/link';
 import Image from 'next/image';
-import { useAuth } from '@/context/AuthContext'; // Importamos el contexto
+import { useAuth } from '@/context/AuthContext';
 import { usePathname } from 'next/navigation';
 import { motion, AnimatePresence } from 'framer-motion';
 import { RoleGuard } from '@/components/RoleGuard';
-import NotificationBell from '@/components/NotificacionBell'; // <--- Campana añadida
+import NotificationBell from '@/components/NotificacionBell';
 
 export default function Navbar() {
-  const { logout, user, isLoading } = useAuth(); // EXTRAEMOS TODO
+  const { logout, user, isLoading } = useAuth();
   const pathname = usePathname();
   const [isOpen, setIsOpen] = useState(false);
 
@@ -21,6 +21,9 @@ export default function Navbar() {
     await logout();
     window.location.replace('/login');
   };
+
+  // Verificamos si el usuario actual posee privilegios de administrador
+  const isAdmin = user?.role === 'ADMIN' || user?.role === 'SUPERADMIN';
 
   return (
     <motion.nav 
@@ -42,23 +45,18 @@ export default function Navbar() {
         <div className="hidden md:flex items-center gap-8">
           <ul className="flex items-center gap-6 text-sm font-medium text-slate-300">
             <li><Link href="/dashboard" className="hover:text-white transition-colors">Inicio</Link></li>
-              <li><Link href="/view" className="hover:text-white transition-colors">Articulos-Repositorios</Link></li>
-                        <li><Link href="/normas" className="hover:text-white transition-colors">Normas</Link></li>
-                        <li><Link href="/about" className="hover:text-white transition-colors">Acerca de</Link></li>
-                         <li><Link href="/chronicles/create" className="hover:text-white transition-colors">Envíos</Link></li>
+            <li><Link href="/view" className="hover:text-white transition-colors">Articulos-Repositorios</Link></li>
+            <li><Link href="/normas" className="hover:text-white transition-colors">Normas</Link></li>
+            <li><Link href="/about" className="hover:text-white transition-colors">Acerca de</Link></li>
+            <li><Link href="/chronicles/create" className="hover:text-white transition-colors">Envíos</Link></li>
             <li><Link href="https://upta.edu.ve/" className="hover:text-white transition-colors">Portal UPTA</Link></li>
           </ul>
 
-          {/* Si está cargando, ocultamos para evitar parpadeos */}
-          {!isLoading && (
-            <RoleGuard roles={['ADMIN', 'SUPERADMIN']}>
-              {/* <Link href="/chronicles/create" className="bg-sky-700 hover:bg-sky-800 text-white px-4 py-2 rounded text-sm transition-colors">
-                Subir Publicación
-              </Link> */}
-              <Link href="/admin" className="bg-sky-700 hover:bg-sky-800 text-white px-4 py-2 rounded text-sm transition-colors">
-                Admin Panel
-              </Link>
-            </RoleGuard>
+          {/* Panel de administración renderizado de forma síncrona segura al terminar isLoading */}
+          {!isLoading && isAdmin && (
+            <Link href="/admin" className="bg-sky-700 hover:bg-sky-800 text-white px-4 py-2 rounded text-sm transition-colors">
+              Admin Panel
+            </Link>
           )}
 
           {/* Campanita en escritorio */}
@@ -88,15 +86,18 @@ export default function Navbar() {
           >
             <div className="flex flex-col p-6 gap-4 text-slate-300">
               <Link href="/dashboard" onClick={() => setIsOpen(false)}>Inicio</Link>
-               <Link href="/view" onClick={() => setIsOpen(false)}>Articulos-Repositorios</Link>
+              <Link href="/view" onClick={() => setIsOpen(false)}>Articulos-Repositorios</Link>
               <Link href="/normas" onClick={() => setIsOpen(false)}>Normas</Link>
               <Link href="/about" onClick={() => setIsOpen(false)}>Acerca de</Link>
-               <Link href="/chronicles/create" onClick={() => setIsOpen(false)}>Envíos</Link>
+              <Link href="/chronicles/create" onClick={() => setIsOpen(false)}>Envíos</Link>
               <Link href="https://upta.edu.ve/" onClick={() => setIsOpen(false)}>Portal UPTA</Link>
-              <RoleGuard roles={['ADMIN', 'SUPERADMIN']}>
-                {/* <Link href="/chronicles/create" onClick={() => setIsOpen(false)} className="text-sky-400 font-semibold">Subir Publicación</Link> */}
-                <Link href="/admin" onClick={() => setIsOpen(false)} className="text-sky-400 font-semibold">Admin Panel</Link>
-              </RoleGuard>
+              
+              {!isLoading && isAdmin && (
+                <Link href="/admin" onClick={() => setIsOpen(false)} className="text-sky-400 font-semibold">
+                  Admin Panel
+                </Link>
+              )}
+              
               <button onClick={handleLogout} className="text-left text-red-400">Salir</button>
             </div>
           </motion.div>
