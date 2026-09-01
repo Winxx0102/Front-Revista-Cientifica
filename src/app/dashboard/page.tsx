@@ -26,9 +26,8 @@ export default function DashboardPage() {
   const [currentPage, setCurrentPage] = useState(1);
   const [currentIndex, setCurrentIndex] = useState(0);
   const itemsPerPage = 6;
-  
+
   // Refresco controlado al entrar al Dashboard (INTACTO)
-  export default function DashboardPage() {
   useEffect(() => {
     // Verificamos si ya se recargó en esta pestaña/sesión
     const hasRefreshed = sessionStorage.getItem('dashboardRefreshed');
