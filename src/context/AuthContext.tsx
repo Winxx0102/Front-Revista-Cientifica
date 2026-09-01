@@ -54,15 +54,29 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
     updateUser(userData);
   };
 
-  const logout = async () => {
+const logout = async () => {
     try {
       await fetchApi('/auth/logout');
     } catch (e) {
       console.error("Error al cerrar sesión");
     } finally {
+      // 1. Limpiamos todos los datos locales para navegadores basados en Chromium
+      localStorage.removeItem('token');
+      localStorage.removeItem('user');
+      localStorage.clear();
+
+      // 2. Invalidamos cookies de sesión del navegador por seguridad
+      document.cookie.split(";").forEach((c) => {
+        document.cookie = c
+          .replace(/^ +/, "")
+          .replace(/=.*/, "=;expires=" + new Date(0).toUTCString() + ";path=/");
+      });
+
+      // 3. Limpiamos el estado global
       setUser(null);
-      // Forzamos redirección para limpiar estados persistentes
-      window.location.replace('/login');
+
+      // 4. Forzamos recarga completa ignorando caché con location.href en lugar de replace
+      window.location.href = '/login';
     }
   };
 
