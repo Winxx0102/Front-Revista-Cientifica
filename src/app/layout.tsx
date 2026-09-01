@@ -4,6 +4,7 @@ import { AuthProvider } from "@/context/AuthContext";
 import { Toaster } from "sonner";
 import Navbar from "@/components/Navbar";
 import Footer from "@/components/Footer";
+import AdminRefreshGuard from "@/components/AdminRefreshGuard"; // <--- Importamos el guardián rudimentario
 import "./globals.css";
 
 // Cargamos tus fuentes "cool" de siempre
@@ -37,6 +38,7 @@ export default function RootLayout({
       <body className="min-h-screen flex flex-col font-sans">
         
         <AuthProvider>
+          <AdminRefreshGuard /> {/* <--- Lo añadimos aquí para que se ejecute globalmente apenas entre */}
           <Navbar /> 
           
           <main className="flex-grow">
