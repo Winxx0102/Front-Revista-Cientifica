@@ -28,17 +28,18 @@ export default function DashboardPage() {
   const itemsPerPage = 6;
   
   // Refresco controlado al entrar al Dashboard (INTACTO)
+  export default function DashboardPage() {
   useEffect(() => {
+    // Verificamos si ya se recargó en esta pestaña/sesión
     const hasRefreshed = sessionStorage.getItem('dashboardRefreshed');
-    
+
     if (!hasRefreshed) {
+      // Marcamos que ya se recargó para que no entre en bucle
       sessionStorage.setItem('dashboardRefreshed', 'true');
+      
+      // Forzamos la recarga inmediata al entrar
       window.location.reload();
     }
-    
-    return () => {
-      sessionStorage.removeItem('dashboardRefreshed');
-    };
   }, []);
 
   // Timer del carrusel con efecto suave
