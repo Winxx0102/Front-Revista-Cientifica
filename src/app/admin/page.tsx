@@ -105,7 +105,7 @@ export default function AdminPage() {
     [users, search]
   );
 
-  if (isLoading) return <div className="min-h-screen flex items-center justify-center text-indigo-400">Cargando...</div>;
+  if (isLoading || loading) return <div className="min-h-screen flex items-center justify-center text-indigo-400">Cargando...</div>;
   if (!user || (user.role !== 'ADMIN' && user.role !== 'SUPERADMIN')) return null;
 
   return ( 
