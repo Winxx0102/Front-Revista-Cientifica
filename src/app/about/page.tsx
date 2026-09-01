@@ -1,11 +1,11 @@
 'use client';
 
 import ProtectedRoute from "@/components/ProtectedRoute";
-import { motion } from "framer-motion";
+import { motion, type Variants } from "framer-motion";
 import { FaBookOpen, FaBullseye, FaEye, FaGlobeAmericas, FaShieldAlt, FaExternalLinkAlt } from "react-icons/fa";
 
 export default function AboutPage() {
-  const containerVariants = {
+  const containerVariants: Variants = {
     hidden: { opacity: 0 },
     show: {
       opacity: 1,
@@ -15,9 +15,13 @@ export default function AboutPage() {
     }
   };
 
-  const itemVariants = {
+  const itemVariants: Variants = {
     hidden: { opacity: 0, y: 20 },
-    show: { opacity: 1, y: 0, transition: { duration: 0.4, ease: "easeOut" } }
+    show: {
+      opacity: 1,
+      y: 0,
+      transition: { duration: 0.4, ease: "easeOut" as const }
+    }
   };
 
   return (
