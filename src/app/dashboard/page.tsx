@@ -7,7 +7,7 @@ import ChronicleCard from '@/components/ChroniclesCard';
 import { motion, AnimatePresence } from 'framer-motion';
 import { FaSearch, FaInfoCircle, FaChevronLeft, FaChevronRight, FaBookOpen, FaUniversity, FaLayerGroup, FaStar } from 'react-icons/fa';
 import Link from 'next/link';
-import { usePathname } from 'next/navigation';s
+import { usePathname } from 'next/navigation';
 const carouselImages = ['/images/carrucel1xdd.jpeg', '/images/carrucel2xdd.jpeg'];
 
 type Chronicle = {
