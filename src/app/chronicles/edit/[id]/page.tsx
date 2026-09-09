@@ -5,7 +5,7 @@ import { fetchApi } from '@/services/api';
 import { supabase } from '@/lib/supabaseClient';
 import { useAuth } from '@/context/AuthContext';
 import { toast } from 'sonner';
-import { motion } from 'framer-motion';
+import { motion, AnimatePresence } from 'framer-motion';
 import ProtectedRoute from '@/components/ProtectedRoute';
 import AdminGuard from '@/components/AdminGuard';
 
@@ -20,6 +20,7 @@ export default function EditChroniclePage() {
   });
   const [selectedFile, setSelectedFile] = useState<File | null>(null);
   const [loading, setLoading] = useState(true);
+  const [isDeleting, setIsDeleting] = useState(false); // Estado para la animación de destrucción
 
   useEffect(() => {
     if (id && user) {
@@ -83,18 +84,21 @@ export default function EditChroniclePage() {
   const handleDelete = async () => {
     if (!confirm('¿Estás seguro de que deseas eliminar esta publicación de forma permanente?')) return;
     
-    const loadingToast = toast.loading("Eliminando publicación...");
+    // Disparamos la animación cinemática de desintegración
+    setIsDeleting(true);
 
     try {
+      // Pequeño retraso deliberado para que luzca fluida la animación antes de la petición real
+      await new Promise(resolve => setTimeout(resolve, 900));
+
       await fetchApi(`/revista/${id}`, {
         method: 'DELETE',
       });
 
-      toast.dismiss(loadingToast);
       toast.success('Publicación eliminada correctamente.');
       router.push('/view');
     } catch (err: unknown) {
-      toast.dismiss(loadingToast);
+      setIsDeleting(false); // Si falla, revertimos el estado visual
       toast.error(err instanceof Error ? err.message : 'Error al eliminar la crónica.');
     }
   };
@@ -104,7 +108,37 @@ export default function EditChroniclePage() {
   return (
     <ProtectedRoute>
       <AdminGuard>
-        <div className="min-h-screen py-16 px-6">
+        <div className="min-h-screen py-16 px-6 relative overflow-hidden">
+          
+          {/* Overlay de animación cinemática de borrado */}
+          <AnimatePresence>
+            {isDeleting && (
+              <motion.div 
+                initial={{ opacity: 0 }}
+                animate={{ opacity: 1 }}
+                exit={{ opacity: 0 }}
+                className="absolute inset-0 z-50 bg-[#071321]/95 backdrop-blur-md flex flex-col items-center justify-center gap-6"
+              >
+                <motion.div 
+                  initial={{ scale: 0.8, opacity: 0, filter: 'blur(10px)' }}
+                  animate={{ scale: [0.8, 1.2, 0.4], opacity: [1, 1, 0], filter: ['blur(0px)', 'blur(4px)', 'blur(20px)'] }}
+                  transition={{ duration: 0.8, ease: "easeInOut" }}
+                  className="w-24 h-24 rounded-2xl bg-red-500/20 border border-red-500/50 flex items-center justify-center shadow-[0_0_50px_rgba(239,68,68,0.4)]"
+                >
+                  <span className="text-3xl">🗑️</span>
+                </motion.div>
+                <motion.p 
+                  initial={{ y: 10, opacity: 0 }}
+                  animate={{ y: 0, opacity: 1 }}
+                  transition={{ delay: 0.2 }}
+                  className="text-red-400 font-serif italic text-xl tracking-wider"
+                >
+                  Desintegrando publicación del registro...
+                </motion.p>
+              </motion.div>
+            )}
+          </AnimatePresence>
+
           <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} className="max-w-3xl mx-auto">
             <div className="flex justify-between items-center mb-8">
               <h1 className="text-3xl font-serif italic text-white">Editar Publicación</h1>
