@@ -1,17 +1,18 @@
 'use client';
 
-import { FaGithub, FaEnvelope } from 'react-icons/fa';
+import { FaGithub } from 'react-icons/fa';
+import { useAuth } from '@/context/AuthContext';
 
 export default function Footer() {
-  // Rutas de navegación rápida
+  const { user, isLoading } = useAuth();
+
   const navLinks = [
     { name: 'Inicio', url: '/dashboard' },
     { name: 'Portal UPTA', url: 'https://upta.edu.ve' },
-   { name: 'Artículos y repositorios', url: '/view' },        // Lista completa de publicaciones
+    { name: 'Artículos y repositorios', url: '/view' },
     { name: 'Envíos', url: '/chronicles/create' },
-     { name: 'Acerca de', url: '/about' },
-      { name: 'Normas', url: '/normas' },
-    
+    { name: 'Acerca de', url: '/about' },
+    { name: 'Normas', url: '/normas' },
   ];
 
   return (
@@ -19,7 +20,6 @@ export default function Footer() {
       <div className="max-w-6xl mx-auto px-6 py-12">
         <div className="flex flex-col md:flex-row justify-between items-start gap-12">
           
-          {/* Info Revista */}
           <div className="space-y-4">
             <h3 className="font-bold text-white text-lg tracking-tight">Saberes Politécnicos</h3>
             <p className="text-xs max-w-xs leading-relaxed">
@@ -27,28 +27,27 @@ export default function Footer() {
             </p>
           </div>
 
-          {/* Navegación */}
-          <div className="flex flex-col gap-2">
-            <span className="text-[10px] font-bold text-slate-600 uppercase tracking-widest mb-2">Navegación</span>
-            {navLinks.map((link) => (
-              <a key={link.name} href={link.url} className="text-sm hover:text-white transition-colors">
-                {link.name}
-              </a>
-            ))}
-          </div>
+          {!isLoading && user && (
+            <div className="flex flex-col gap-2">
+              <span className="text-[10px] font-bold text-slate-600 uppercase tracking-widest mb-2">Navegación</span>
+              {navLinks.map((link) => (
+                <a key={link.name} href={link.url} className="text-sm hover:text-white transition-colors">
+                  {link.name}
+                </a>
+              ))}
+            </div>
+          )}
         </div>
 
-        {/* Footer Inferior: Gestión Técnica Minimalista */}
         <div className="mt-16 pt-8 border-t border-white/5 flex flex-col md:flex-row justify-between items-center gap-6 text-[10px] text-slate-600">
           <p className="font-mono">© {new Date().getFullYear()} UPTA — DERECHOS RESERVADOS</p>
           
           <div className="flex items-center gap-4">
             <span>GESTIÓN TÉCNICA:</span>
             <div className="flex items-center gap-3">
-              <a href="https://github.com/Winxx0102" target="_blank" className="hover:text-white transition-colors">
+              <a href="https://github.com/Winxx0102" target="_blank" rel="noopener noreferrer" className="hover:text-white transition-colors">
                 <FaGithub size={12} />
               </a>
-             
             </div>
           </div>
         </div>
