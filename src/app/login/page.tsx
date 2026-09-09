@@ -6,11 +6,12 @@ import { useRouter } from 'next/navigation';
 import { fetchApi } from '@/services/api';
 import { useAuth } from '@/context/AuthContext';
 import { motion } from 'framer-motion';
-import { FaLock, FaEnvelope, FaArrowRight, FaUniversity } from 'react-icons/fa';
+import { FaLock, FaEnvelope, FaArrowRight, FaUniversity, FaExclamationTriangle } from 'react-icons/fa';
 
 export default function LoginPage() {
   const [form, setForm] = useState({ email: '', password: '' });
   const [loading, setLoading] = useState(false);
+  const [errorMsg, setErrorMsg] = useState('');
   
   const { updateUser, user, isLoading } = useAuth();
   const router = useRouter();
@@ -24,6 +25,7 @@ export default function LoginPage() {
   const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
     setLoading(true);
+    setErrorMsg('');
 
     try {
       const data = await fetchApi('/auth/login', { 
@@ -32,12 +34,19 @@ export default function LoginPage() {
       });
 
       const userData = data.user || data;
+
+      // Verificación estricta de estatus bloqueado
+      if (userData?.isBlocked || userData?.status === 'blocked' || userData?.blocked === true) {
+        setErrorMsg('Su usuario está bloqueado. Comuníquese con el comité editorial o soporte técnico.');
+        setLoading(false);
+        return;
+      }
+
       updateUser(userData); 
-      
       router.push('/dashboard');
     } catch (err: unknown) {
       console.error("Login fallido:", err);
-      alert('Credenciales incorrectas o error de conexión');
+      setErrorMsg('Credenciales incorrectas o error de conexión');
     } finally {
       setLoading(false);
     }
@@ -90,7 +99,18 @@ export default function LoginPage() {
           <div className="absolute top-0 left-0 w-full h-1 bg-gradient-to-r from-transparent via-sky-500 to-transparent opacity-0 group-hover:opacity-100 transition-opacity" />
           
           <h2 className="text-2xl font-serif italic text-white mb-2">Iniciar Sesión</h2>
-          <p className="text-slate-400 text-xs mb-8">Ingrese sus datos registrados para autenticarse.</p>
+          <p className="text-slate-400 text-xs mb-6">Ingrese sus datos registrados para autenticarse.</p>
+
+          {errorMsg && (
+            <motion.div 
+              initial={{ opacity: 0, y: -5 }} 
+              animate={{ opacity: 1, y: 0 }}
+              className="mb-6 p-4 bg-red-950/60 border border-red-500/30 rounded-2xl flex items-start gap-3 text-red-200 text-xs leading-relaxed shadow-lg"
+            >
+              <FaExclamationTriangle className="w-4 h-4 text-red-400 flex-shrink-0 mt-0.5" />
+              <span>{errorMsg}</span>
+            </motion.div>
+          )}
           
           <div className="space-y-4">
             <div className="relative">
