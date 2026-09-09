@@ -7,7 +7,7 @@ import ChronicleCard from '@/components/ChroniclesCard';
 import { motion, AnimatePresence } from 'framer-motion';
 import { FaSearch, FaInfoCircle, FaChevronLeft, FaChevronRight, FaBookOpen, FaUniversity, FaLayerGroup, FaStar } from 'react-icons/fa';
 import Link from 'next/link';
-
+import { usePathname } from 'next/navigation';s
 const carouselImages = ['/images/carrucel1xdd.jpeg', '/images/carrucel2xdd.jpeg'];
 
 type Chronicle = {
@@ -28,18 +28,18 @@ export default function DashboardPage() {
   const [isMounted] = useState(true);
   const itemsPerPage = 6;
 
-  // Refresco controlado al entrar al Dashboard (INTACTO)
- useEffect(() => {
-    const hasRefreshed = sessionStorage.getItem('dashboardRefreshed');
+ 
+  const pathname = usePathname();
+useEffect(() => {
+  // Obtenemos la última ruta donde se recargó
+  const lastRefreshedPath = sessionStorage.getItem('lastRefreshedPath');
 
-    if (!hasRefreshed) {
-      sessionStorage.setItem('dashboardRefreshed', 'true');
-      const timer = setTimeout(() => {
-        window.location.reload();
-      }, 2000);
-      return () => clearTimeout(timer);
-    }
-  }, []);
+  // Si la ruta actual es distinta a la última que se recargó, significa que acaba de entrar aquí
+  if (lastRefreshedPath !== pathname) {
+    sessionStorage.setItem('lastRefreshedPath', pathname);
+    window.location.reload();
+  }
+}, [pathname]);
 
   // Timer del carrusel con efecto suave
   useEffect(() => {
