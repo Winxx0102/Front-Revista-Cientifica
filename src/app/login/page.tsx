@@ -44,11 +44,17 @@ export default function LoginPage() {
 
       updateUser(userData); 
       router.push('/dashboard');
-    } catch (err: unknown) {
+   } catch (err: unknown) {
       console.error("Login fallido:", err);
       
-      // Capturamos el mensaje exacto que lanza el backend
-      const errorMessage = (err as { message?: string })?.message || '';
+      // Intentamos extraer el mensaje de diferentes estructuras posibles de error
+      const errorObj = err as { message?: string; response?: { message?: string; data?: { message?: string } } };
+      const errorMessage = 
+        errorObj?.message || 
+        errorObj?.response?.message || 
+        errorObj?.response?.data?.message || 
+        JSON.stringify(err) || 
+        '';
       
       if (errorMessage.toLowerCase().includes('bloqueado')) {
         setErrorMsg('Su usuario está bloqueado. Comuníquese con el comité editorial.');
