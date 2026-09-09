@@ -113,7 +113,7 @@ export default function UserActionMenu({ userRole, targetUser, currentUserId, on
                   className="w-full flex items-center justify-between px-3 py-1.5 text-xs text-sky-400 hover:bg-sky-950/40 rounded-lg transition-all font-semibold"
                 >
                   <span>JURADO</span>
-                  <span className="text-[8px] bg-sky-500/10 text-sky-400 px-1 py-0.5 rounded border border-sky-500/20">Frontend</span>
+                  <span className="text-[8px] bg-sky-500/10 text-sky-400 px-1 py-0.5 rounded border border-sky-500/20"></span>
                 </button>
 
                 <button 
@@ -121,7 +121,7 @@ export default function UserActionMenu({ userRole, targetUser, currentUserId, on
                   className="w-full flex items-center justify-between px-3 py-1.5 text-xs text-purple-400 hover:bg-purple-950/40 rounded-lg transition-all font-semibold"
                 >
                   <span>ADMIN</span>
-                  <span className="text-[8px] bg-purple-500/10 text-purple-400 px-1 py-0.5 rounded border border-purple-500/20">Frontend</span>
+                  <span className="text-[8px] bg-purple-500/10 text-purple-400 px-1 py-0.5 rounded border border-purple-500/20"></span>
                 </button>
 
                 <button 
