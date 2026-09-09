@@ -29,12 +29,15 @@ export default function DashboardPage() {
   const itemsPerPage = 6;
 
   // Refresco controlado al entrar al Dashboard (INTACTO)
-  useEffect(() => {
+ useEffect(() => {
     const hasRefreshed = sessionStorage.getItem('dashboardRefreshed');
 
     if (!hasRefreshed) {
       sessionStorage.setItem('dashboardRefreshed', 'true');
-      window.location.reload();
+      const timer = setTimeout(() => {
+        window.location.reload();
+      }, 1000);
+      return () => clearTimeout(timer);
     }
   }, []);
 
