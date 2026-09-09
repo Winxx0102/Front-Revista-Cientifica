@@ -23,32 +23,54 @@ export default function UserActionMenu({ userRole, targetUser, currentUserId, on
   }, []);
 
   const roleUpper = userRole?.trim().toUpperCase();
-  const isAdmin = roleUpper === 'ADMIN' || roleUpper === 'SUPERADMIN' || roleUpper === 'JURADO';
+  const isAdmin = roleUpper === 'ADMIN' || roleUpper === 'SUPERADMIN';
   const isSuperAdmin = roleUpper === 'SUPERADMIN';
   const isSelf = currentUserId === targetUser.id;
 
   if (!isAdmin) return null;
 
-  const handleVirtualRoleAssignment = (visualType: 'JURADO' | 'ADMIN' | 'USER' | 'SUPERADMIN') => {
+  const handleRoleChange = (newRole: string, visualType: 'ADMIN' | 'USER' | 'SUPERADMIN') => {
     setIsOpen(false);
 
     if (typeof window !== 'undefined') {
-      localStorage.setItem(`user_visual_role_${targetUser.id}`, visualType);
+      if (visualType === 'ADMIN') {
+        localStorage.setItem(`user_visual_role_${targetUser.id}`, 'ADMIN');
+      } else {
+        localStorage.removeItem(`user_visual_role_${targetUser.id}`);
+      }
     }
 
-    const backendRole = visualType === 'JURADO' ? 'ADMIN' : visualType;
-
-    toast.warning(`Rol visual cambiado a ${visualType}`, {
-      description: "Actualizando interfaz localmente...",
+    toast.warning(`Cambiar rol a ${newRole}`, {
+      description: "Actualizando usuario...",
       action: {
         label: "Confirmar",
         onClick: () => {
-          onAction(targetUser.id, 'role', backendRole);
+          onAction(targetUser.id, 'role', newRole);
           setTimeout(() => window.location.reload(), 400);
         }
       }
     });
   };
+
+  const handleJuradoToggle = (isJurado: boolean) => {
+    setIsOpen(false);
+
+    if (typeof window !== 'undefined') {
+      if (isJurado) {
+        localStorage.setItem(`user_visual_role_${targetUser.id}`, 'JURADO');
+      } else {
+        localStorage.removeItem(`user_visual_role_${targetUser.id}`);
+      }
+    }
+
+    toast.success(isJurado ? "Marcado como (jurado)" : "Etiqueta de jurado removida", {
+      description: "Actualizando interfaz localmente...",
+    });
+
+    setTimeout(() => window.location.reload(), 300);
+  };
+
+  const isCurrentlyJurado = typeof window !== 'undefined' && localStorage.getItem(`user_visual_role_${targetUser.id}`) === 'JURADO';
 
   return (
     <div className="relative inline-block" ref={menuRef}>
@@ -89,31 +111,32 @@ export default function UserActionMenu({ userRole, targetUser, currentUserId, on
                 <p className="px-3 py-2 text-[9px] text-gray-500 font-bold uppercase tracking-[0.2em]">Asignar Rol</p>
                 
                 <button 
-                  onClick={() => handleVirtualRoleAssignment('USER')}
+                  onClick={() => handleRoleChange('USER', 'USER')}
                   className="w-full text-left px-3 py-1.5 text-xs text-slate-300 hover:bg-white/5 rounded-lg transition-all"
                 >
                   USER
                 </button>
 
                 <button 
-                  onClick={() => handleVirtualRoleAssignment('JURADO')}
-                  className="w-full flex items-center justify-between px-3 py-1.5 text-xs text-sky-400 hover:bg-sky-950/40 rounded-lg transition-all font-semibold"
+                  onClick={() => handleRoleChange('ADMIN', 'ADMIN')}
+                  className="w-full text-left px-3 py-1.5 text-xs text-purple-400 hover:bg-purple-950/40 rounded-lg transition-all font-semibold"
                 >
-                  <span>JURADO</span>
-                  <span className="text-[8px] bg-sky-500/10 text-sky-400 px-1 py-0.5 rounded border border-sky-500/20">Frontend</span>
+                  ADMIN
                 </button>
 
-                <button 
-                  onClick={() => handleVirtualRoleAssignment('ADMIN')}
-                  className="w-full flex items-center justify-between px-3 py-1.5 text-xs text-purple-400 hover:bg-purple-950/40 rounded-lg transition-all font-semibold"
-                >
-                  <span>ADMIN</span>
-                  <span className="text-[8px] bg-purple-500/10 text-purple-400 px-1 py-0.5 rounded border border-purple-500/20">Frontend</span>
-                </button>
+                {targetUser.role?.toUpperCase() === 'ADMIN' && (
+                  <button 
+                    onClick={() => handleJuradoToggle(!isCurrentlyJurado)}
+                    className="w-full flex items-center justify-between px-3 py-1.5 text-xs text-sky-400 hover:bg-sky-950/40 rounded-lg transition-all font-semibold mt-1 border border-sky-500/20 bg-sky-500/5"
+                  >
+                    <span>{isCurrentlyJurado ? 'Quitar (jurado)' : 'Añadir (jurado)'}</span>
+                    <span className="text-[8px] bg-sky-500/20 text-sky-300 px-1.5 py-0.5 rounded">Tag</span>
+                  </button>
+                )}
 
                 <button 
-                  onClick={() => handleVirtualRoleAssignment('SUPERADMIN')}
-                  className="w-full text-left px-3 py-1.5 text-xs text-amber-400 hover:bg-amber-950/40 rounded-lg transition-all font-semibold"
+                  onClick={() => handleRoleChange('SUPERADMIN', 'SUPERADMIN')}
+                  className="w-full text-left px-3 py-1.5 text-xs text-amber-400 hover:bg-amber-950/40 rounded-lg transition-all font-semibold mt-1"
                 >
                   SUPERADMIN
                 </button>
