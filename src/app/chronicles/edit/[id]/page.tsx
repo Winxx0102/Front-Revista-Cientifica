@@ -51,7 +51,6 @@ export default function EditChroniclePage() {
     try {
       let finalFilePath = formData.file_path;
 
-      // Lógica de archivo: Si hay un archivo seleccionado, subir a Supabase
       if (selectedFile) {
         const fileExt = selectedFile.name.split('.').pop();
         const fileName = `${Date.now()}-${Math.random().toString(36).substring(7)}.${fileExt}`;
@@ -67,7 +66,6 @@ export default function EditChroniclePage() {
         toast.info("No se seleccionó un nuevo archivo, se mantendrá el actual.");
       }
 
-      // Enviar datos actualizados al backend
       await fetchApi(`/revista/${id}`, {
         method: 'PATCH',
         body: JSON.stringify({ ...formData, file_path: finalFilePath }),
@@ -82,6 +80,25 @@ export default function EditChroniclePage() {
     }
   };
 
+  const handleDelete = async () => {
+    if (!confirm('¿Estás seguro de que deseas eliminar esta publicación de forma permanente?')) return;
+    
+    const loadingToast = toast.loading("Eliminando publicación...");
+
+    try {
+      await fetchApi(`/revista/${id}`, {
+        method: 'DELETE',
+      });
+
+      toast.dismiss(loadingToast);
+      toast.success('Publicación eliminada correctamente.');
+      router.push('/view');
+    } catch (err: unknown) {
+      toast.dismiss(loadingToast);
+      toast.error(err instanceof Error ? err.message : 'Error al eliminar la crónica.');
+    }
+  };
+
   if (loading) return <div className="min-h-screen flex items-center justify-center text-slate-500 uppercase tracking-widest text-sm">Cargando editor...</div>;
 
   return (
@@ -89,7 +106,16 @@ export default function EditChroniclePage() {
       <AdminGuard>
         <div className="min-h-screen py-16 px-6">
           <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} className="max-w-3xl mx-auto">
-            <h1 className="text-3xl font-serif italic text-white mb-8">Editar Publicación</h1>
+            <div className="flex justify-between items-center mb-8">
+              <h1 className="text-3xl font-serif italic text-white">Editar Publicación</h1>
+              <button 
+                type="button"
+                onClick={handleDelete}
+                className="px-4 py-2 bg-red-500/10 hover:bg-red-500/20 text-red-400 border border-red-500/30 rounded text-xs font-bold uppercase tracking-wider transition-all"
+              >
+                Eliminar Publicación
+              </button>
+            </div>
             
             <form onSubmit={handleSubmit} className="bg-[#0e243d] border border-white/5 p-10 rounded-2xl shadow-2xl space-y-6">
               <div className="grid md:grid-cols-2 gap-6">
