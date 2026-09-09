@@ -29,15 +29,11 @@ export default function UserActionMenu({ userRole, targetUser, currentUserId, on
 
   if (!isAdmin) return null;
 
-  const handleRoleChange = (newRole: string, visualType: 'ADMIN' | 'USER' | 'SUPERADMIN') => {
+  const handleRoleChange = (newRole: string) => {
     setIsOpen(false);
 
     if (typeof window !== 'undefined') {
-      if (visualType === 'ADMIN') {
-        localStorage.setItem(`user_visual_role_${targetUser.id}`, 'ADMIN');
-      } else {
-        localStorage.removeItem(`user_visual_role_${targetUser.id}`);
-      }
+      localStorage.removeItem(`user_visual_role_${targetUser.id}`);
     }
 
     toast.warning(`Cambiar rol a ${newRole}`, {
@@ -51,26 +47,6 @@ export default function UserActionMenu({ userRole, targetUser, currentUserId, on
       }
     });
   };
-
-  const handleJuradoToggle = (isJurado: boolean) => {
-    setIsOpen(false);
-
-    if (typeof window !== 'undefined') {
-      if (isJurado) {
-        localStorage.setItem(`user_visual_role_${targetUser.id}`, 'JURADO');
-      } else {
-        localStorage.removeItem(`user_visual_role_${targetUser.id}`);
-      }
-    }
-
-    toast.success(isJurado ? "Marcado como (jurado)" : "Etiqueta de jurado removida", {
-      description: "Actualizando interfaz localmente...",
-    });
-
-    setTimeout(() => window.location.reload(), 300);
-  };
-
-  const isCurrentlyJurado = typeof window !== 'undefined' && localStorage.getItem(`user_visual_role_${targetUser.id}`) === 'JURADO';
 
   return (
     <div className="relative inline-block" ref={menuRef}>
@@ -111,32 +87,22 @@ export default function UserActionMenu({ userRole, targetUser, currentUserId, on
                 <p className="px-3 py-2 text-[9px] text-gray-500 font-bold uppercase tracking-[0.2em]">Asignar Rol</p>
                 
                 <button 
-                  onClick={() => handleRoleChange('USER', 'USER')}
+                  onClick={() => handleRoleChange('USER')}
                   className="w-full text-left px-3 py-1.5 text-xs text-slate-300 hover:bg-white/5 rounded-lg transition-all"
                 >
                   USER
                 </button>
 
                 <button 
-                  onClick={() => handleRoleChange('ADMIN', 'ADMIN')}
+                  onClick={() => handleRoleChange('ADMIN')}
                   className="w-full text-left px-3 py-1.5 text-xs text-purple-400 hover:bg-purple-950/40 rounded-lg transition-all font-semibold"
                 >
                   ADMIN
                 </button>
 
-                {targetUser.role?.toUpperCase() === 'ADMIN' && (
-                  <button 
-                    onClick={() => handleJuradoToggle(!isCurrentlyJurado)}
-                    className="w-full flex items-center justify-between px-3 py-1.5 text-xs text-sky-400 hover:bg-sky-950/40 rounded-lg transition-all font-semibold mt-1 border border-sky-500/20 bg-sky-500/5"
-                  >
-                    <span>{isCurrentlyJurado ? 'Quitar (jurado)' : 'Añadir (jurado)'}</span>
-                    <span className="text-[8px] bg-sky-500/20 text-sky-300 px-1.5 py-0.5 rounded">Tag</span>
-                  </button>
-                )}
-
                 <button 
-                  onClick={() => handleRoleChange('SUPERADMIN', 'SUPERADMIN')}
-                  className="w-full text-left px-3 py-1.5 text-xs text-amber-400 hover:bg-amber-950/40 rounded-lg transition-all font-semibold mt-1"
+                  onClick={() => handleRoleChange('SUPERADMIN')}
+                  className="w-full text-left px-3 py-1.5 text-xs text-amber-400 hover:bg-amber-950/40 rounded-lg transition-all font-semibold"
                 >
                   SUPERADMIN
                 </button>
