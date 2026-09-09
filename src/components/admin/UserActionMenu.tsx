@@ -5,7 +5,7 @@ import { toast } from 'sonner';
 
 interface Props {
   userRole: string;
-  targetUser: { id: number; role: string; isBlocked: boolean };
+  targetUser: { id: number; role: string; isBlocked: boolean; isJurado?: boolean }; // Opcional: si manejas un indicador visual interno
   currentUserId?: number; 
   onAction: (id: number, action: 'block' | 'unblock' | 'role', role?: string) => void;
 }
@@ -28,6 +28,23 @@ export default function UserActionMenu({ userRole, targetUser, currentUserId, on
   const isSelf = currentUserId === targetUser.id;
 
   if (!isAdmin) return null;
+
+  // Función exclusiva para formatear la vista del rol (Transforma ADMIN en JURADO visualmente)
+  const getVisualRoleInfo = (backendRole: string) => {
+    const upper = backendRole?.toUpperCase();
+    if (upper === 'ADMIN') {
+      // Si en tu lógica necesitas diferenciar qué admin es jurado, puedes evaluar alguna propiedad.
+      // Por defecto, trataremos los ADMIN elegidos como JURADO visualmente con su etiqueta separada:
+      return { label: 'JURADO', color: 'text-sky-400 bg-sky-500/10 border-sky-500/20' };
+    }
+    if (upper === 'SUPERADMIN') {
+      return { label: 'SUPERADMIN', color: 'text-amber-400 bg-amber-500/10 border-amber-500/20' };
+    }
+    if (upper === 'USER') {
+      return { label: 'USER', color: 'text-slate-400 bg-slate-500/10 border-slate-500/20' };
+    }
+    return { label: upper, color: 'text-gray-400 bg-gray-500/10 border-gray-500/20' };
+  };
 
   const handleRoleChange = (backendRole: string, label: string) => {
     setIsOpen(false);
@@ -86,7 +103,7 @@ export default function UserActionMenu({ userRole, targetUser, currentUserId, on
                   USER
                 </button>
 
-                {/* Opción JURADO (Envía ADMIN al backend pero se distingue visualmente en azul cielo) */}
+                {/* Opción JURADO (Envía ADMIN al backend pero se muestra como Jurado con color celeste) */}
                 <button 
                   onClick={() => handleRoleChange('ADMIN', 'JURADO')}
                   className="w-full flex items-center justify-between px-3 py-1.5 text-xs text-sky-400 hover:bg-sky-950/40 rounded-lg transition-all font-semibold"
@@ -95,13 +112,13 @@ export default function UserActionMenu({ userRole, targetUser, currentUserId, on
                   <span className="text-[8px] bg-sky-500/10 text-sky-400 px-1.5 py-0.5 rounded border border-sky-500/20">Evaluador</span>
                 </button>
 
-                {/* Opción ADMIN (Envía ADMIN al backend pero se distingue visualmente en morado/púrpura) */}
+                {/* Opción ADMIN técnico puro (Envía ADMIN al backend pero con estilo violeta) */}
                 <button 
                   onClick={() => handleRoleChange('ADMIN', 'ADMIN')}
                   className="w-full flex items-center justify-between px-3 py-1.5 text-xs text-purple-400 hover:bg-purple-950/40 rounded-lg transition-all font-semibold"
                 >
-                  <span>ADMIN</span>
-                  <span className="text-[8px] bg-purple-500/10 text-purple-400 px-1.5 py-0.5 rounded border border-purple-500/20">Sistema</span>
+                  <span>ADMIN (Sistema)</span>
+                  <span className="text-[8px] bg-purple-500/10 text-purple-400 px-1.5 py-0.5 rounded border border-purple-500/20">Full</span>
                 </button>
 
                 {/* Opción SUPERADMIN */}
