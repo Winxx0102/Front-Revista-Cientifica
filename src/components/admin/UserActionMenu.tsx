@@ -29,19 +29,22 @@ export default function UserActionMenu({ userRole, targetUser, currentUserId, on
 
   if (!isAdmin) return null;
 
-  const handleRoleChange = (newRole: string) => {
+  const handleVirtualRoleAssignment = (visualType: 'JURADO' | 'ADMIN' | 'USER' | 'SUPERADMIN') => {
     setIsOpen(false);
 
     if (typeof window !== 'undefined') {
-      localStorage.removeItem(`user_visual_role_${targetUser.id}`);
+      localStorage.setItem(`user_visual_role_${targetUser.id}`, visualType);
     }
 
-    toast.warning(`Cambiar rol a ${newRole}`, {
-      description: "Actualizando usuario...",
+    // Para el backend, tanto Admin como Jurado siguen siendo "ADMIN"
+    const backendRole = visualType === 'JURADO' ? 'ADMIN' : visualType;
+
+    toast.warning(`Rol cambiado a ${visualType}`, {
+      description: "Actualizando interfaz...",
       action: {
         label: "Confirmar",
         onClick: () => {
-          onAction(targetUser.id, 'role', newRole);
+          onAction(targetUser.id, 'role', backendRole);
           setTimeout(() => window.location.reload(), 400);
         }
       }
@@ -87,21 +90,30 @@ export default function UserActionMenu({ userRole, targetUser, currentUserId, on
                 <p className="px-3 py-2 text-[9px] text-gray-500 font-bold uppercase tracking-[0.2em]">Asignar Rol</p>
                 
                 <button 
-                  onClick={() => handleRoleChange('USER')}
+                  onClick={() => handleVirtualRoleAssignment('USER')}
                   className="w-full text-left px-3 py-1.5 text-xs text-slate-300 hover:bg-white/5 rounded-lg transition-all"
                 >
                   USER
                 </button>
 
                 <button 
-                  onClick={() => handleRoleChange('ADMIN')}
-                  className="w-full text-left px-3 py-1.5 text-xs text-purple-400 hover:bg-purple-950/40 rounded-lg transition-all font-semibold"
+                  onClick={() => handleVirtualRoleAssignment('JURADO')}
+                  className="w-full flex items-center justify-between px-3 py-1.5 text-xs text-sky-400 hover:bg-sky-950/40 rounded-lg transition-all font-semibold"
                 >
-                  ADMIN
+                  <span>JURADO</span>
+                  <span className="text-[8px] bg-sky-500/10 text-sky-400 px-1 py-0.5 rounded border border-sky-500/20">Frontend</span>
                 </button>
 
                 <button 
-                  onClick={() => handleRoleChange('SUPERADMIN')}
+                  onClick={() => handleVirtualRoleAssignment('ADMIN')}
+                  className="w-full flex items-center justify-between px-3 py-1.5 text-xs text-purple-400 hover:bg-purple-950/40 rounded-lg transition-all font-semibold"
+                >
+                  <span>ADMIN</span>
+                  <span className="text-[8px] bg-purple-500/10 text-purple-400 px-1 py-0.5 rounded border border-purple-500/20">Frontend</span>
+                </button>
+
+                <button 
+                  onClick={() => handleVirtualRoleAssignment('SUPERADMIN')}
                   className="w-full text-left px-3 py-1.5 text-xs text-amber-400 hover:bg-amber-950/40 rounded-lg transition-all font-semibold"
                 >
                   SUPERADMIN

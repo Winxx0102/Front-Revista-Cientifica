@@ -26,6 +26,23 @@ type PendingArticle = {
   createdAt: string;
 };
 
+// Función auxiliar para obtener el rol visual en la tabla (Basado en localStorage)
+const getVisualRoleData = (user: AdminUser) => {
+  const dbRole = user.role?.toUpperCase();
+  const localType = typeof window !== 'undefined' ? localStorage.getItem(`user_visual_role_${user.id}`) : null;
+
+  if (dbRole === 'SUPERADMIN') {
+    return { label: 'Superadmin', bg: 'bg-amber-500/10 text-amber-400 border border-amber-500/20' };
+  }
+  if (dbRole === 'ADMIN') {
+    if (localType === 'JURADO') {
+      return { label: 'Jurado', bg: 'bg-sky-500/10 text-sky-400 border border-sky-500/20' };
+    }
+    return { label: 'Admin', bg: 'bg-purple-500/10 text-purple-400 border border-purple-500/20' };
+  }
+  return { label: 'User', bg: 'bg-slate-500/10 text-slate-400 border border-slate-500/20' };
+};
+
 export default function AdminPage() {
   const { user, isLoading } = useAuth();
   const router = useRouter();
@@ -88,12 +105,11 @@ export default function AdminPage() {
     }
   };
 
-  // Función para aprobar artículo
   const handleApproveArticle = async (id: number) => {
     try {
       await fetchApi(`/revista/${id}/approve`, { method: 'PATCH' });
       toast.success("Artículo autorizado y publicado con éxito.");
-      await loadData(); // Recarga la lista de pendientes y métricas
+      await loadData();
     } catch (err) {
       console.error("Error al aprobar:", err);
       toast.error("No se pudo autorizar el artículo.");
@@ -119,7 +135,6 @@ export default function AdminPage() {
             <p className="text-gray-400 text-sm">Gestión centralizada de usuarios, auditoría de artículos y métricas.</p>
           </div>
 
-          {/* Botón de Campana de Auditoría */}
           <div className="relative">
             <button 
               onClick={() => setIsNotificationsOpen(!isNotificationsOpen)}
@@ -134,7 +149,6 @@ export default function AdminPage() {
               )}
             </button>
 
-            {/* Menú Desplegable de Artículos Pendientes */}
             <AnimatePresence>
               {isNotificationsOpen && (
                 <motion.div 
@@ -220,27 +234,28 @@ export default function AdminPage() {
                 </tr>
               </thead>
               <tbody className="divide-y divide-white/5">
-                {filteredUsers.map((u) => (
-                  <tr key={u.id} className="group hover:bg-white/[0.03] transition-colors">
-                    <td className="p-4 text-sm text-gray-300 font-medium">{u.email}</td>
-                    <td className="p-4">
-                      <span className={`px-3 py-1 rounded-full text-[10px] uppercase font-black tracking-wider ${
-                        u.role === 'SUPERADMIN' ? 'bg-purple-500/10 text-purple-400' : 'bg-indigo-500/10 text-indigo-400'
-                      }`}>
-                        {u.role}
-                      </span>
-                    </td>
-                    <td className="p-4 text-center text-gray-400 font-mono text-sm">{u._count?.chronicles || 0}</td>
-                    <td className="p-4 flex justify-center">
-                      <UserActionMenu 
-                        userRole={user.role ?? ''}
-                        currentUserId={Number(user.id)}
-                        targetUser={{ id: u.id, role: u.role, isBlocked: u.isBlocked }}
-                        onAction={handleAction}
-                      />
-                    </td>
-                  </tr>
-                ))}
+                {filteredUsers.map((u) => {
+                  const roleBadge = getVisualRoleData(u);
+                  return (
+                    <tr key={u.id} className="group hover:bg-white/[0.03] transition-colors">
+                      <td className="p-4 text-sm text-gray-300 font-medium">{u.email}</td>
+                      <td className="p-4">
+                        <span className={`px-3 py-1 rounded-full text-[10px] uppercase font-black tracking-wider ${roleBadge.bg}`}>
+                          {roleBadge.label}
+                        </span>
+                      </td>
+                      <td className="p-4 text-center text-gray-400 font-mono text-sm">{u._count?.chronicles || 0}</td>
+                      <td className="p-4 flex justify-center">
+                        <UserActionMenu 
+                          userRole={user.role ?? ''}
+                          currentUserId={Number(user.id)}
+                          targetUser={{ id: u.id, role: u.role, isBlocked: u.isBlocked }}
+                          onAction={handleAction}
+                        />
+                      </td>
+                    </tr>
+                  );
+                })}
               </tbody>
             </table>
           </div>
