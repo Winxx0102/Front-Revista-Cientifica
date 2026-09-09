@@ -46,7 +46,15 @@ export default function LoginPage() {
       router.push('/dashboard');
     } catch (err: unknown) {
       console.error("Login fallido:", err);
-      setErrorMsg('Credenciales incorrectas o error de conexión');
+      
+      // Capturamos el mensaje exacto que lanza el backend
+      const errorMessage = (err as { message?: string })?.message || '';
+      
+      if (errorMessage.toLowerCase().includes('bloqueado')) {
+        setErrorMsg('Su usuario está bloqueado. Comuníquese con el comité editorial.');
+      } else {
+        setErrorMsg('Credenciales incorrectas o error de conexión');
+      }
     } finally {
       setLoading(false);
     }
