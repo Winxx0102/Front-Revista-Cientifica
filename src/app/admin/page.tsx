@@ -7,7 +7,7 @@ import { motion, AnimatePresence } from 'framer-motion';
 import { useRouter } from 'next/navigation';
 import UserActionMenu from '@/components/admin/UserActionMenu';
 import AdminGuard from '@/components/AdminGuard';
-import { Bell, CheckCircle2, Eye, X } from 'lucide-react';
+import { Bell, CheckCircle2, Eye, X, ShieldAlert } from 'lucide-react';
 
 type AdminUser = {
   id: number;
@@ -26,7 +26,6 @@ type PendingArticle = {
   createdAt: string;
 };
 
-// Función auxiliar para obtener el rol visual en la tabla (Basado en localStorage)
 const getVisualRoleData = (user: AdminUser) => {
   const dbRole = user.role?.toUpperCase();
   const localType = typeof window !== 'undefined' ? localStorage.getItem(`user_visual_role_${user.id}`) : null;
@@ -90,14 +89,18 @@ export default function AdminPage() {
     }
   }, [isLoading, user, router]);
 
-  const handleAction = async (id: number, action: 'block' | 'unblock' | 'role', newRole?: string) => {
+  const handleAction = async (id: number, action: 'block' | 'unblock' | 'role' | 'delete', newRole?: string) => {
     try {
       if (action === 'role') {
         await fetchApi(`/users/role/${id}`, { method: 'PATCH', body: JSON.stringify({ role: newRole }) });
+        toast.success("Rol actualizado exitosamente");
+      } else if (action === 'delete') {
+        await fetchApi(`/users/${id}`, { method: 'DELETE' });
+        toast.success("Usuario eliminado correctamente");
       } else {
         await fetchApi(`/users/${action}/${id}`, { method: 'PATCH' });
+        toast.success(action === 'block' ? "Usuario bloqueado correctamente" : "Usuario desbloqueado correctamente");
       }
-      toast.success("Operación exitosa");
       await loadData();
     } catch (err) {
       console.error("Error en acción:", err);
@@ -238,7 +241,14 @@ export default function AdminPage() {
                   const roleBadge = getVisualRoleData(u);
                   return (
                     <tr key={u.id} className="group hover:bg-white/[0.03] transition-colors">
-                      <td className="p-4 text-sm text-gray-300 font-medium">{u.email}</td>
+                      <td className="p-4 text-sm text-gray-300 font-medium flex items-center gap-2">
+                        {u.email}
+                        {u.isBlocked && (
+                          <span className="flex items-center gap-1 bg-red-500/10 text-red-400 border border-red-500/20 px-2 py-0.5 rounded-full text-[9px] font-bold uppercase tracking-wider" title="Usuario bloqueado">
+                            <ShieldAlert className="w-3 h-3" /> Bloqueado
+                          </span>
+                        )}
+                      </td>
                       <td className="p-4">
                         <span className={`px-3 py-1 rounded-full text-[10px] uppercase font-black tracking-wider ${roleBadge.bg}`}>
                           {roleBadge.label}

@@ -7,7 +7,7 @@ interface Props {
   userRole: string;
   targetUser: { id: number; role: string; isBlocked: boolean };
   currentUserId?: number; 
-  onAction: (id: number, action: 'block' | 'unblock' | 'role', role?: string) => void;
+  onAction: (id: number, action: 'block' | 'unblock' | 'role' | 'delete', role?: string) => void;
 }
 
 export default function UserActionMenu({ userRole, targetUser, currentUserId, onAction }: Props) {
@@ -36,7 +36,6 @@ export default function UserActionMenu({ userRole, targetUser, currentUserId, on
       localStorage.setItem(`user_visual_role_${targetUser.id}`, visualType);
     }
 
-    // Para el backend, tanto Admin como Jurado siguen siendo "ADMIN"
     const backendRole = visualType === 'JURADO' ? 'ADMIN' : visualType;
 
     toast.warning(`Rol cambiado a ${visualType}`, {
@@ -74,7 +73,10 @@ export default function UserActionMenu({ userRole, targetUser, currentUserId, on
           >
             {!isSelf && (
               <button 
-                onClick={() => { onAction(targetUser.id, targetUser.isBlocked ? 'unblock' : 'block'); setIsOpen(false); }}
+                onClick={() => { 
+                  onAction(targetUser.id, targetUser.isBlocked ? 'unblock' : 'block'); 
+                  setIsOpen(false); 
+                }}
                 className={`w-full text-left px-3 py-2 text-xs rounded-lg font-bold transition-colors ${
                   targetUser.isBlocked 
                     ? 'text-emerald-400 hover:bg-emerald-950/50' 
@@ -87,6 +89,16 @@ export default function UserActionMenu({ userRole, targetUser, currentUserId, on
 
             {isSuperAdmin && !isSelf && (
               <div className="border-t border-white/5 mt-1 pt-1">
+                <button 
+                  onClick={() => { 
+                    onAction(targetUser.id, 'delete'); 
+                    setIsOpen(false); 
+                  }}
+                  className="w-full text-left px-3 py-2 text-xs text-red-500 hover:bg-red-950/50 rounded-lg font-bold transition-colors mb-1"
+                >
+                  Eliminar Usuario
+                </button>
+
                 <p className="px-3 py-2 text-[9px] text-gray-500 font-bold uppercase tracking-[0.2em]">Asignar Rol</p>
                 
                 <button 
