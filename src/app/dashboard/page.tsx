@@ -37,7 +37,7 @@ useEffect(() => {
       sessionStorage.setItem('dashboard_reloaded', 'true');
       const timer = setTimeout(() => {
         window.location.reload();
-      }, 1000); // Retraso exacto de 1 segundo
+      }, 500); // Retraso exacto de 1 segundo
       
       return () => clearTimeout(timer);
     }
