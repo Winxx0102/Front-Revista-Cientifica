@@ -36,7 +36,7 @@ export default function DashboardPage() {
       sessionStorage.setItem('dashboardRefreshed', 'true');
       const timer = setTimeout(() => {
         window.location.reload();
-      }, 1000);
+      }, 2000);
       return () => clearTimeout(timer);
     }
   }, []);
