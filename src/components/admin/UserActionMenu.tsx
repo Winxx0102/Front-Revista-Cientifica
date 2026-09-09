@@ -23,19 +23,19 @@ export default function UserActionMenu({ userRole, targetUser, currentUserId, on
   }, []);
 
   const roleUpper = userRole?.trim().toUpperCase();
-  const isAdmin = roleUpper === 'ADMIN' || roleUpper === 'SUPERADMIN';
+  const isAdmin = roleUpper === 'ADMIN' || roleUpper === 'SUPERADMIN' || roleUpper === 'JURADO';
   const isSuperAdmin = roleUpper === 'SUPERADMIN';
   const isSelf = currentUserId === targetUser.id;
 
   if (!isAdmin) return null;
 
-  const handleRoleChange = (role: string) => {
+  const handleRoleChange = (backendRole: string, label: string) => {
     setIsOpen(false);
-    toast.warning(`¿Cambiar rol a ${role}?`, {
+    toast.warning(`¿Cambiar rol a ${label}?`, {
       description: "Esta acción modificará los permisos del usuario de forma inmediata.",
       action: {
         label: "Confirmar",
-        onClick: () => onAction(targetUser.id, 'role', role)
+        onClick: () => onAction(targetUser.id, 'role', backendRole)
       }
     });
   };
@@ -77,15 +77,32 @@ export default function UserActionMenu({ userRole, targetUser, currentUserId, on
             {isSuperAdmin && !isSelf && (
               <div className="border-t border-white/5 mt-1 pt-1">
                 <p className="px-3 py-2 text-[9px] text-gray-500 font-bold uppercase tracking-[0.2em]">Asignar Nuevo Rol</p>
-                {['USER', 'ADMIN', 'SUPERADMIN'].map((role) => (
-                  <button 
-                    key={role}
-                    onClick={() => handleRoleChange(role)}
-                    className="w-full text-left px-3 py-1.5 text-xs text-gray-300 hover:text-indigo-400 hover:bg-white/5 rounded-lg transition-all"
-                  >
-                    {role}
-                  </button>
-                ))}
+                
+                {/* Opciones con mapeo inteligente al backend */}
+                <button 
+                  onClick={() => handleRoleChange('USER', 'USER')}
+                  className="w-full text-left px-3 py-1.5 text-xs text-gray-300 hover:text-indigo-400 hover:bg-white/5 rounded-lg transition-all"
+                >
+                  USER
+                </button>
+                <button 
+                  onClick={() => handleRoleChange('ADMIN', 'JURADO')}
+                  className="w-full text-left px-3 py-1.5 text-xs text-sky-400 hover:bg-sky-950/40 rounded-lg transition-all font-semibold"
+                >
+                  JURADO <span className="text-[9px] text-gray-500 font-normal">(Admin)</span>
+                </button>
+                <button 
+                  onClick={() => handleRoleChange('ADMIN', 'ADMIN')}
+                  className="w-full text-left px-3 py-1.5 text-xs text-gray-300 hover:text-indigo-400 hover:bg-white/5 rounded-lg transition-all"
+                >
+                  ADMIN
+                </button>
+                <button 
+                  onClick={() => handleRoleChange('SUPERADMIN', 'SUPERADMIN')}
+                  className="w-full text-left px-3 py-1.5 text-xs text-gray-300 hover:text-indigo-400 hover:bg-white/5 rounded-lg transition-all"
+                >
+                  SUPERADMIN
+                </button>
               </div>
             )}
           </motion.div>
