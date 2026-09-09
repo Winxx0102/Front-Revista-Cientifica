@@ -31,16 +31,21 @@ export default function DashboardPage() {
  
   const pathname = usePathname();
 useEffect(() => {
-  // Obtenemos la última ruta donde se recargó
-  const lastRefreshedPath = sessionStorage.getItem('lastRefreshedPath');
+    const hasReloaded = sessionStorage.getItem('dashboard_reloaded');
 
-  // Si la ruta actual es distinta a la última que se recargó, significa que acaba de entrar aquí
-  if (lastRefreshedPath !== pathname) {
-    sessionStorage.setItem('lastRefreshedPath', pathname);
-    window.location.reload();
-  }
-}, [pathname]);
+    if (!hasReloaded) {
+      sessionStorage.setItem('dashboard_reloaded', 'true');
+      const timer = setTimeout(() => {
+        window.location.reload();
+      }, 1000); // Retraso exacto de 1 segundo
+      
+      return () => clearTimeout(timer);
+    }
 
+    return () => {
+      sessionStorage.removeItem('dashboard_reloaded');
+    };
+  }, [pathname]);
   // Timer del carrusel con efecto suave
   useEffect(() => {
     const timer = setInterval(() => {
