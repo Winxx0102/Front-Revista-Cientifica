@@ -59,7 +59,7 @@ export default function UserActionMenu({ userRole, targetUser, currentUserId, on
             initial={{ opacity: 0, scale: 0.95, y: -10 }} 
             animate={{ opacity: 1, scale: 1, y: 0 }} 
             exit={{ opacity: 0, scale: 0.95, y: -10 }}
-            className="absolute right-0 mt-3 w-48 bg-gray-950/90 backdrop-blur-xl border border-white/10 rounded-2xl shadow-2xl p-2 z-[60]"
+            className="absolute right-0 mt-3 w-52 bg-gray-950/95 backdrop-blur-xl border border-white/10 rounded-2xl shadow-2xl p-2 z-[60]"
           >
             {!isSelf && (
               <button 
@@ -78,28 +78,36 @@ export default function UserActionMenu({ userRole, targetUser, currentUserId, on
               <div className="border-t border-white/5 mt-1 pt-1">
                 <p className="px-3 py-2 text-[9px] text-gray-500 font-bold uppercase tracking-[0.2em]">Asignar Nuevo Rol</p>
                 
-                {/* Opciones con mapeo inteligente al backend */}
+                {/* Opción USER */}
                 <button 
                   onClick={() => handleRoleChange('USER', 'USER')}
-                  className="w-full text-left px-3 py-1.5 text-xs text-gray-300 hover:text-indigo-400 hover:bg-white/5 rounded-lg transition-all"
+                  className="w-full text-left px-3 py-1.5 text-xs text-slate-300 hover:text-white hover:bg-white/5 rounded-lg transition-all"
                 >
                   USER
                 </button>
+
+                {/* Opción JURADO (Envía ADMIN al backend pero se distingue visualmente en azul cielo) */}
                 <button 
                   onClick={() => handleRoleChange('ADMIN', 'JURADO')}
-                  className="w-full text-left px-3 py-1.5 text-xs text-sky-400 hover:bg-sky-950/40 rounded-lg transition-all font-semibold"
+                  className="w-full flex items-center justify-between px-3 py-1.5 text-xs text-sky-400 hover:bg-sky-950/40 rounded-lg transition-all font-semibold"
                 >
-                  JURADO <span className="text-[9px] text-gray-500 font-normal">(Admin)</span>
+                  <span>JURADO</span>
+                  <span className="text-[8px] bg-sky-500/10 text-sky-400 px-1.5 py-0.5 rounded border border-sky-500/20">Evaluador</span>
                 </button>
+
+                {/* Opción ADMIN (Envía ADMIN al backend pero se distingue visualmente en morado/púrpura) */}
                 <button 
                   onClick={() => handleRoleChange('ADMIN', 'ADMIN')}
-                  className="w-full text-left px-3 py-1.5 text-xs text-gray-300 hover:text-indigo-400 hover:bg-white/5 rounded-lg transition-all"
+                  className="w-full flex items-center justify-between px-3 py-1.5 text-xs text-purple-400 hover:bg-purple-950/40 rounded-lg transition-all font-semibold"
                 >
-                  ADMIN
+                  <span>ADMIN</span>
+                  <span className="text-[8px] bg-purple-500/10 text-purple-400 px-1.5 py-0.5 rounded border border-purple-500/20">Sistema</span>
                 </button>
+
+                {/* Opción SUPERADMIN */}
                 <button 
                   onClick={() => handleRoleChange('SUPERADMIN', 'SUPERADMIN')}
-                  className="w-full text-left px-3 py-1.5 text-xs text-gray-300 hover:text-indigo-400 hover:bg-white/5 rounded-lg transition-all"
+                  className="w-full text-left px-3 py-1.5 text-xs text-amber-400 hover:bg-amber-950/40 rounded-lg transition-all font-semibold"
                 >
                   SUPERADMIN
                 </button>
